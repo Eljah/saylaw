@@ -7,6 +7,9 @@ import lombok.Setter;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -21,5 +24,17 @@ public class Owner {
     @Id
     @GeneratedValue
     private Long id;
+
+    @NotEmpty
+    @NotNull
+    private String firstName;
+    private String secondName;
+    @NotEmpty
+    @NotNull
+    private String lastName;
+
+    @OneToMany(mappedBy = "owner")
+    private List<OwnerUserAssociation> ownerUserAssociations;
+
 
 }

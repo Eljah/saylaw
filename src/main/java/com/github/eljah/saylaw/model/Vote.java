@@ -4,9 +4,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by eljah32 on 4/22/2018.
@@ -21,4 +21,21 @@ public class Vote {
     @GeneratedValue
     private Long id;
     private String name;
+
+    @OneToMany(mappedBy = "vote")
+    List<ShareVote> shareVotes;
+
+    @OneToMany(mappedBy = "vote")
+    List<VoteQuestion> voteQuestions;
+
+    @Temporal(TemporalType.DATE)
+    Date voteInitiated;
+
+    @Temporal(TemporalType.DATE)
+    Date voteOnsite;
+
+    @Temporal(TemporalType.DATE)
+    Date voteValidThrough;
+
+
 }

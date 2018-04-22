@@ -6,6 +6,7 @@ import lombok.Setter;
 import org.springframework.data.solr.core.mapping.Indexed;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * Created by eljah32 on 4/22/2018.
@@ -34,9 +35,6 @@ public class Share {
     private Float area;
     private ShareType type;
 
-    @ManyToOne
-    private Owner owner;
-
     @Embedded
     private ExtractOfRegistry extractOfRegistry;
 
@@ -46,6 +44,9 @@ public class Share {
         RESIDENTAL,
         NONRESIDENTAL
     }
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "share")
+    private List<ShareVote> shareVotes;
 
 }
 
