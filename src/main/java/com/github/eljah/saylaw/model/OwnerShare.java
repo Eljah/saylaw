@@ -26,6 +26,12 @@ public class OwnerShare {
     @OneToOne
     private Owner owner;
 
+    @ManyToOne
+    private Share share;
+
     private Boolean active;
+
+    @Embedded
+    private ExtractOfRegistry extractOfRegistry;
 
 }

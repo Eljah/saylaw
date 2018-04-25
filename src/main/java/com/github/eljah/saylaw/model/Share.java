@@ -1,5 +1,6 @@
 package com.github.eljah.saylaw.model;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,6 +17,7 @@ import java.util.List;
 @Setter
 @Getter
 @NoArgsConstructor
+@EqualsAndHashCode(of = {"name"})
 public class Share {
     @Id
     @GeneratedValue
@@ -25,6 +27,7 @@ public class Share {
     private Long version;
 
     @Indexed
+    @Column(unique = true)
     private String name;
 
     private int shareNominator;
@@ -35,9 +38,8 @@ public class Share {
     private Float area;
     private ShareType type;
 
-    @Embedded
-    private ExtractOfRegistry extractOfRegistry;
-
+    @OneToMany(mappedBy = "share")
+    private List<OwnerShare> ownerShare;
 
     public enum ShareType
     {
@@ -47,6 +49,7 @@ public class Share {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "share")
     private List<ShareVote> shareVotes;
+
 
 }
 

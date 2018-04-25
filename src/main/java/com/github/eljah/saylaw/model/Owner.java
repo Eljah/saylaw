@@ -25,8 +25,8 @@ public class Owner {
     @GeneratedValue
     private Long id;
 
-    @NotEmpty
-    @NotNull
+    //@NotEmpty
+    //@NotNull
     private String firstName;
     private String secondName;
     @NotEmpty

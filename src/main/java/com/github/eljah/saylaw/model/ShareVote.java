@@ -30,6 +30,9 @@ public class ShareVote {
     @Temporal(TemporalType.DATE)
     Date voteAquired;
 
+    @OneToOne
+    private ShareVoteProtocol protocol;
+
     private boolean onSiteVote;
 
 }
