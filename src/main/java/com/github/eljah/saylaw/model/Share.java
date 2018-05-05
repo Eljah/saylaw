@@ -1,12 +1,10 @@
 package com.github.eljah.saylaw.model;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.data.solr.core.mapping.Indexed;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,7 +14,9 @@ import java.util.List;
 @Entity
 @Setter
 @Getter
+@Builder(toBuilder=true)
 @NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode(of = {"name"})
 public class Share {
     @Id
@@ -39,7 +39,7 @@ public class Share {
     private ShareType type;
 
     @OneToMany(mappedBy = "share")
-    private List<OwnerShare> ownerShare;
+    private List<OwnerShare> ownerShare=new ArrayList<>();
 
     public enum ShareType
     {

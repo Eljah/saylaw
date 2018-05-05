@@ -112,8 +112,14 @@ public class ShareController {
                 ownerShare.setActive(true);
                 ownerShare.setOwner(owner);
                 //share.setOwnerShare(ownerShare);
-                ownerShare.setShare(sharesMap.get(shareName));
+                Share shareToAddToOwner=sharesMap.get(shareName);
+                if (shareToAddToOwner!=null) {
+                    ownerShare.setShare(shareToAddToOwner);
+                    shareToAddToOwner.
+                            getOwnerShare().
+                            add(ownerShare);
 
+                }
                 ExtractOfRegistry extractOfRegistry=new ExtractOfRegistry();
                 extractOfRegistry.setOwnershipCertificate(row.getCell(5).toString());
                 extractOfRegistry.setCadastralNumber(row.getCell(6).toString());
