@@ -40,15 +40,15 @@ public class ShareServiceImpl implements ShareService {
                     if (preexistinForUpdate.equals(share))
                     {
                         preexistinForUpdate=share.toBuilder().id(preexistinForUpdate.getId()).version(preexistinForUpdate.getVersion()).build();
-                        //shareRepository.save(preexistinForUpdate);
                         List <OwnerShare> ownerShareList=share.getOwnerShare();
                                 for (OwnerShare ownerShare: ownerShareList)
                                 {
                                     ownerShare.setShare(preexistinForUpdate);
                                 }
+                        shareRepository.save(preexistinForUpdate);
                     }
                 }
-                shareRepository.flush();
+
             }
         }
     }
