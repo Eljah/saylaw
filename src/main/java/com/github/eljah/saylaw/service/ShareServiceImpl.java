@@ -6,9 +6,11 @@ import com.github.eljah.saylaw.repository.OwnerRepository;
 import com.github.eljah.saylaw.repository.OwnerShareRepository;
 import com.github.eljah.saylaw.repository.ShareRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.LockModeType;
 import java.util.List;
 import java.util.Set;
 
@@ -40,6 +42,7 @@ public class ShareServiceImpl implements ShareService {
                     if (preexistinForUpdate.equals(share))
                     {
                         preexistinForUpdate=share.toBuilder().id(preexistinForUpdate.getId()).version(preexistinForUpdate.getVersion()).build();
+                        //preexistinForUpdate=share.toBuilder().id(preexistinForUpdate.getId()).build();
                         List <OwnerShare> ownerShareList=share.getOwnerShare();
                                 for (OwnerShare ownerShare: ownerShareList)
                                 {
