@@ -12,7 +12,7 @@ import lombok.ToString;
 @Setter
 @Getter
 public class FloatNominatorDenominator {
-    Float floatValue;
+    Double doubleValue;
     Double doubleFractional;
     Integer nominatorValue;
     Integer denominatorValue;

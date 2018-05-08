@@ -35,7 +35,7 @@ public class Share {
     private double shareValue;
 
     @Indexed
-    private Float area;
+    private Double area;
     private ShareType type;
 
     @OneToMany(mappedBy = "share")

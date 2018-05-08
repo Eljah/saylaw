@@ -8,11 +8,9 @@ import com.github.eljah.saylaw.repository.OwnerRepository;
 import com.github.eljah.saylaw.repository.OwnerShareRepository;
 import com.github.eljah.saylaw.repository.ShareRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Lock;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.LockModeType;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -74,11 +72,11 @@ public class ShareServiceImpl implements ShareService {
         for (Share currentShare: allShares)
         {
             FloatNominatorDenominator currentFloatNominatorDenominator= new FloatNominatorDenominator();
-            currentFloatNominatorDenominator.setFloatValue(currentShare.getArea());
+            currentFloatNominatorDenominator.setDoubleValue(currentShare.getArea());
             currentFloatNominatorDenominator.setDtoForBinding(currentShare);
             denominatorFind.allShares.add(currentFloatNominatorDenominator);
         }
-        denominatorFind.process();
+        denominatorFind.processByFractional();
         for (FloatNominatorDenominator currentFloatNominatorDenominator: denominatorFind.allShares)
         {
             ((Share)currentFloatNominatorDenominator.getDtoForBinding()).setShareValue(currentFloatNominatorDenominator.getDoubleFractional());
@@ -86,6 +84,59 @@ public class ShareServiceImpl implements ShareService {
             ((Share)currentFloatNominatorDenominator.getDtoForBinding()).setShareDenominator(currentFloatNominatorDenominator.getDenominatorValue());
         }
         shareRepository.saveAll(allShares);
+
+
+    }
+
+    @Override
+    public void calculateOwnerShareValues() {
+        List<OwnerShare> allShares=ownerShareRepository.findAll();
+        DenominatorFind denominatorFind=new DenominatorFind();
+        HashSet<Integer> denominators=new HashSet<>();
+
+        for (OwnerShare ownerShare: allShares)
+        {
+            denominators.add(ownerShare.getShareDenominator());
+            ownerShare.setShareValueCommon(ownerShare.getShareNominator()*ownerShare.getShare().getShareValue()/ownerShare.getShareDenominator());
+            ownerShare.setShareDenominatorCommon(ownerShare.getShareDenominator()*ownerShare.getShare().getShareDenominator());
+            ownerShare.setShareNominatorCommon(ownerShare.getShareNominator()*ownerShare.getShare().getShareNominator());
+            System.out.println("Denominator:"+ownerShare.getShareDenominator());
+        }
+
+//        Set<Integer> rareDenomenators=new HashSet<>();
+
+//        for (Integer denominator: denominators)
+//        {
+//            for (Integer denominator2: denominators)
+//            {
+//                if (denominator>denominator2&&(denominator%denominator2)!=0)
+//                {
+//                    rareDenomenators.add(denominator);
+//                }
+//            }
+//        }
+
+        for (Integer denominator: denominators)
+        {
+            System.out.println("Denominator:"+denominator);
+            System.out.println();
+            System.out.println();
+            for (OwnerShare ownerShare: allShares)
+            {
+                System.out.println("OwnerShare:"+ownerShare);
+                 if (denominator.equals(ownerShare.getShareDenominator())) {
+                     System.out.println("Denominator equals");
+                 }
+                else
+                 {
+                     System.out.println("Denominator not equals");
+                     ownerShare.setShareDenominatorCommon(ownerShare.getShareDenominatorCommon()*denominator);
+                     ownerShare.setShareNominatorCommon(ownerShare.getShareNominatorCommon()*denominator);
+                 }
+                System.out.println("OwnerShare:"+ownerShare);
+            }
+        }
+        ownerShareRepository.saveAll(allShares);
 
 
     }

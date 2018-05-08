@@ -3,6 +3,7 @@ package com.github.eljah.saylaw.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 
@@ -14,6 +15,7 @@ import javax.persistence.*;
 @Setter
 @Getter
 @NoArgsConstructor
+@ToString
 public class OwnerShare {
     @Id
     @GeneratedValue
@@ -22,6 +24,9 @@ public class OwnerShare {
     private int shareNominator;
     private int shareDenominator;
     private double shareValue;
+    private int shareNominatorCommon;
+    private int shareDenominatorCommon;
+    private double shareValueCommon;
 
     @OneToOne
     private Owner owner;
