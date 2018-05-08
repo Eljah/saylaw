@@ -12,4 +12,5 @@ import java.util.Set;
 public interface ShareService {
     void createShares(Set<Share> shares);
     void createOwnerShares(List<OwnerShare> ownerShares);
+    void calculateShareValues();
 }

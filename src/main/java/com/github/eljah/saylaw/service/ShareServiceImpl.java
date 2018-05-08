@@ -1,5 +1,7 @@
 package com.github.eljah.saylaw.service;
 
+import com.github.eljah.saylaw.model.DenominatorFind;
+import com.github.eljah.saylaw.model.FloatNominatorDenominator;
 import com.github.eljah.saylaw.model.OwnerShare;
 import com.github.eljah.saylaw.model.Share;
 import com.github.eljah.saylaw.repository.OwnerRepository;
@@ -63,5 +65,28 @@ public class ShareServiceImpl implements ShareService {
             ownerRepository.save(ownerShare.getOwner());
 
         }
+    }
+
+    @Override
+    public void calculateShareValues() {
+        List<Share> allShares=shareRepository.findAll();
+        DenominatorFind denominatorFind=new DenominatorFind();
+        for (Share currentShare: allShares)
+        {
+            FloatNominatorDenominator currentFloatNominatorDenominator= new FloatNominatorDenominator();
+            currentFloatNominatorDenominator.setFloatValue(currentShare.getArea());
+            currentFloatNominatorDenominator.setDtoForBinding(currentShare);
+            denominatorFind.allShares.add(currentFloatNominatorDenominator);
+        }
+        denominatorFind.process();
+        for (FloatNominatorDenominator currentFloatNominatorDenominator: denominatorFind.allShares)
+        {
+            ((Share)currentFloatNominatorDenominator.getDtoForBinding()).setShareValue(currentFloatNominatorDenominator.getDoubleFractional());
+            ((Share)currentFloatNominatorDenominator.getDtoForBinding()).setShareNominator(currentFloatNominatorDenominator.getNominatorValue());
+            ((Share)currentFloatNominatorDenominator.getDtoForBinding()).setShareDenominator(currentFloatNominatorDenominator.getDenominatorValue());
+        }
+        shareRepository.saveAll(allShares);
+
+
     }
 }

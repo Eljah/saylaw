@@ -141,6 +141,7 @@ public class ShareController {
             redirectAttributes.addFlashAttribute("message",
                     "You successfully uploaded '" + file.getOriginalFilename() + "'");
 
+            shareService.calculateShareValues();
         } catch (IOException e) {
             e.printStackTrace();
         }

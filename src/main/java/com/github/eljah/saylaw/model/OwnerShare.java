@@ -21,7 +21,7 @@ public class OwnerShare {
 
     private int shareNominator;
     private int shareDenominator;
-    private float shareValue;
+    private double shareValue;
 
     @OneToOne
     private Owner owner;

@@ -32,7 +32,7 @@ public class Share {
 
     private int shareNominator;
     private int shareDenominator;
-    private float shareValue;
+    private double shareValue;
 
     @Indexed
     private Float area;
