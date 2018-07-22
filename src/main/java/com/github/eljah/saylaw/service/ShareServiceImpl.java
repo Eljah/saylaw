@@ -30,6 +30,11 @@ public class ShareServiceImpl implements ShareService {
     OwnerShareRepository ownerShareRepository;
 
     @Override
+    public List<Share> showAll() {
+        return shareRepository.findAll();
+    }
+
+    @Override
     public void createShares(Set<Share> shares) {
         List<Share> preexisting = shareRepository.findAll();
         for (Share share : shares) {

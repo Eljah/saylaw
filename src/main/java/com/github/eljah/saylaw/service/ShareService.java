@@ -14,4 +14,5 @@ public interface ShareService {
     void createOwnerShares(List<OwnerShare> ownerShares);
     void calculateShareValues();
     void calculateOwnerShareValues();
+    List<Share> showAll();
 }

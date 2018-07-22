@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div th:if="${all != null}">
+    <h1>Квартиры</h1>
+    <ul>
+        <li th:each="item : ${all}">
+            <h2>[[${item.name}]] ([[${item.area}]])</h2>
+            <div th:if="${item != null && item.getOwnerShare() != null}">
+                <h3>Доли владения</h3>
+                <ul>
+                    <li th:each="ownershare : ${item.getOwnerShare()}" th:text="${ownershare.owner.firstName}">${ownershare.owner.firstName} ${ownershare.owner.secondName} ${ownershare.owner.lastName}</li>
+                </ul>
+            </div>
+        </li>
+
+    </ul>
+</div>
+</body>
+</html>
