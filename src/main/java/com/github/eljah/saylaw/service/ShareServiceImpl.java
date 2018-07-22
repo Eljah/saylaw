@@ -26,7 +26,6 @@ public class ShareServiceImpl implements ShareService {
     @Autowired
     OwnerRepository ownerRepository;
 
-
     @Autowired
     OwnerShareRepository ownerShareRepository;
 

@@ -38,6 +38,8 @@ public class Share {
     private Double area;
     private ShareType type;
 
+    private int floor;
+
     @OneToMany(mappedBy = "share")
     private List<OwnerShare> ownerShare=new ArrayList<>();
 

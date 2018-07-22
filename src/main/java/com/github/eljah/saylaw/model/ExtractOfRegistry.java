@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import javax.persistence.Embeddable;
 import javax.persistence.Entity;
+import javax.persistence.UniqueConstraint;
 import java.util.Date;
 
 /**
@@ -18,7 +19,13 @@ import java.util.Date;
 @NoArgsConstructor
 public class ExtractOfRegistry{
 
+    private String extractNumber;
+
+    private String ownershipCertificateNumber;
+
     private String ownershipCertificate;
+
+    private Date ownershipCertificateDate;
 
     private String cadastralNumber;
 
