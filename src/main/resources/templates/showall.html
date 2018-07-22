@@ -10,10 +10,10 @@
     <ul>
         <li th:each="item : ${all}">
             <h2>[[${item.name}]] ([[${item.area}]])</h2>
-            <div th:if="${item != null && item.getOwnerShare() != null}">
+            <div th:if="${item != null && item.ownerShare != null}">
                 <h3>Доли владения</h3>
                 <ul>
-                    <li th:each="ownershare : ${item.getOwnerShare()}" th:text="${ownershare.owner.firstName}">${ownershare.owner.firstName} ${ownershare.owner.secondName} ${ownershare.owner.lastName}</li>
+                    <li th:each="ownershare : ${item.ownerShare}">[[${ownershare.owner.firstName}]] [[${ownershare.owner.secondName}]] [[${ownershare.owner.lastName}]] [[${ownershare.shareNominatorCommon}]]/[[${ownershare.shareDenominatorCommon}]] ([[${ownershare.shareNominator}]]/[[${ownershare.shareDenominator}]])</li>
                 </ul>
             </div>
         </li>
