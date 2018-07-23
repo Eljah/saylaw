@@ -5,6 +5,9 @@ import com.github.eljah.saylaw.model.Owner;
 import com.github.eljah.saylaw.model.OwnerShare;
 import com.github.eljah.saylaw.model.Share;
 import com.github.eljah.saylaw.service.ShareService;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -15,6 +18,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -253,7 +257,49 @@ public class ShareController {
     @GetMapping("/showAll")
     public String showAll(Model model) {
 
-        model.addAttribute("all",shareService.showAll());
+        model.addAttribute("all", shareService.showAll());
         return "showAll";
+    }
+
+    @GetMapping("/addShare")
+    public String addShare(Model model) {
+
+       //ShareDTO shareDTO=new ShareDTO();
+        //model.addAttribute("sharedto", shareDTO);
+        Share share=new Share();
+        share.setType(Share.ShareType.RESIDENTAL);
+        OwnerShare ownerShare=new OwnerShare();
+        share.getOwnerShare().add(ownerShare);
+        Owner owner=new Owner();
+        ownerShare.setOwner(owner);
+        owner.setLastName("Göbäydullina");
+        ownerShare.setShare(share);
+
+
+        model.addAttribute("share", share);
+        return "addShare";
+    }
+
+    @PostMapping("/addShare")
+    @Transactional
+    public String addShare(@ModelAttribute Share share) {
+        shareService.save(share);
+        shareService.createOwnerShares(share.getOwnerShare(),share);
+        shareService.calculateShareValues();
+        shareService.calculateOwnerShareValues();
+        return "redirect:showAll";
+    }
+
+    @Setter
+    @Getter
+    class ShareDTO {
+        public Share share;
+        public List<OwnerShare> ownerShareList=new ArrayList<OwnerShare>() {};;
+
+        public ShareDTO() {
+            this.share = new Share();
+            this.ownerShareList.add(new OwnerShare());
+            this.share.setOwnerShare(ownerShareList);
+        }
     }
 }

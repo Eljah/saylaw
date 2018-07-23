@@ -39,4 +39,7 @@ public class OwnerShare {
     @Embedded
     private ExtractOfRegistry extractOfRegistry;
 
+    @Version
+    private Long version;
+
 }

@@ -10,8 +10,10 @@ import java.util.Set;
  * Created by eljah32 on 4/25/2018.
  */
 public interface ShareService {
+    void save(Share share);
     void createShares(Set<Share> shares);
     void createOwnerShares(List<OwnerShare> ownerShares);
+    void createOwnerShares(List<OwnerShare> ownerShares, Share share);
     void calculateShareValues();
     void calculateOwnerShareValues();
     List<Share> showAll();

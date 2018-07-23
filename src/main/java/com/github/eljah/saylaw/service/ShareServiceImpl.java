@@ -35,6 +35,11 @@ public class ShareServiceImpl implements ShareService {
     }
 
     @Override
+    public void save(Share share) {
+        shareRepository.save(share);
+    }
+
+    @Override
     public void createShares(Set<Share> shares) {
         List<Share> preexisting = shareRepository.findAll();
         for (Share share : shares) {
@@ -68,6 +73,19 @@ public class ShareServiceImpl implements ShareService {
 
         }
     }
+
+    @Override
+    public void createOwnerShares(List<OwnerShare> ownerShares, Share share) {
+        for (OwnerShare ownerShare : ownerShares) {
+            ownerShare.setActive(true);
+            ownerShare.setShare(share);
+            ownerRepository.save(ownerShare.getOwner());
+            System.out.println(ownerShare.toString());
+            ownerShareRepository.save(ownerShare);
+
+        }
+    }
+
 
     @Override
     public void calculateShareValues() {
