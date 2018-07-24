@@ -30,8 +30,8 @@ public class Share {
     @Column(unique = true)
     private String name;
 
-    private int shareNominator;
-    private int shareDenominator;
+    private long shareNominator;
+    private long shareDenominator;
     private double shareValue;
 
     @Indexed
@@ -52,6 +52,7 @@ public class Share {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "share")
     private List<ShareVote> shareVotes;
 
+    private Boolean active;
 
 }
 

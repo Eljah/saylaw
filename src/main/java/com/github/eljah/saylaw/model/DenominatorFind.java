@@ -66,8 +66,31 @@ public class DenominatorFind {
 
     }
 
+    public HashSet<Integer> processDenominators(HashSet<Integer> denominators)
+    {
+
+        HashSet<Integer> newDenominator=new HashSet<>();
+        //newDenominator.addAll(denominators);
+
+        for (Integer denominator1: denominators)
+        {
+            System.out.println("Denominator 1: "+denominator1);
+            for (Integer denominator2: denominators) {
+                System.out.println("Denominator 2: "+denominator2);
+                if (denominator1!=denominator2&&gcd2(denominator1,denominator2)==denominator1) {
+                    System.out.println("Removing "+denominator1);
+                    newDenominator.add(denominator1);
+                    break;
+                }
+
+            }
+        }
+        return newDenominator;
+
+    }
+
     // non-recursive implementation
-    private int gcd2(int p, int q) {
+    public static int gcd2(int p, int q) {
         while (q != 0) {
             int temp = q;
             q = p % q;

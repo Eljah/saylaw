@@ -85,6 +85,12 @@ public class ShareController {
     @Value("${parse.xls.columns.share.ownership.certificate.file.name}")
     Integer shareOwnershipCetificateColumnFileName;
 
+    @Value("${parse.xls.columns.share.owner.denominator}")
+    Integer shareDenominatorColumn;
+
+    @Value("${parse.xls.columns.share.owner.nominator}")
+    Integer shareNominatorColumn;
+
     @GetMapping("/")
     public String index() {
         return "shareupload";
@@ -124,6 +130,7 @@ public class ShareController {
                         share.setType(Share.ShareType.RESIDENTAL); //todo fix proper parsing
                         share.setArea(new Double(row.getCell(shareAreaColumn).toString()));
                         share.setFloor(new Integer(row.getCell(shareFloorColumn).toString()));
+                        share.setActive(true);
                         shareList.add(share);
                     } else break;
 //                sharesMap.put(row.getCell(1).toString(),share);
@@ -202,38 +209,42 @@ public class ShareController {
                         }
                         extractOfRegistry.setExtractNumber(row.getCell(shareOwnershipCetificateColumnExtractNumber).toString());
                         ownerShare.setExtractOfRegistry(extractOfRegistry);
+
+                        ownerShare.setShareNominator((int)Float.parseFloat(row.getCell(shareNominatorColumn).toString()));
+                        ownerShare.setShareDenominator((int)Float.parseFloat(row.getCell(shareDenominatorColumn).toString()));
+                        ownerShare.setShareValue((double) ownerShare.getShareNominator() / (double) ownerShare.getShareDenominator());
                     }
             }
 
-            Integer sharedShareCount = 0;
-            String previousShareName = "";
-            List<OwnerShare> currentSharedShare = new ArrayList<>();
-
-            for (OwnerShare ownerShare : ownerShareList) {
-                if (ownerShare.getShare() != null && ownerShare.getShare().getName() != null && ownerShare.getShare().getName().equals(previousShareName)) {
-                    sharedShareCount++;
-                    currentSharedShare.add(ownerShare);
-                    System.out.println(sharedShareCount);
-                } else {
-                    for (OwnerShare ownerShareCurrent : currentSharedShare) {
-                        ownerShareCurrent.setShareNominator(1);
-                        ownerShareCurrent.setShareDenominator(sharedShareCount);
-                        ownerShareCurrent.setShareValue(1 / (double) sharedShareCount);
-                    }
-                    sharedShareCount = 0;
-                    currentSharedShare = new ArrayList<>();
-                    sharedShareCount++;
-                    currentSharedShare.add(ownerShare);
-                    System.out.println(sharedShareCount);
-                }
-                previousShareName = ownerShare.getShare().getName();
-            }
-
-            for (OwnerShare ownerShareCurrent : currentSharedShare) {
-                ownerShareCurrent.setShareNominator(1);
-                ownerShareCurrent.setShareDenominator(sharedShareCount);
-                ownerShareCurrent.setShareValue(1 / (double) sharedShareCount);
-            }
+//            Integer sharedShareCount = 0;
+//            String previousShareName = "";
+//            List<OwnerShare> currentSharedShare = new ArrayList<>();
+//
+//            for (OwnerShare ownerShare : ownerShareList) {
+//                if (ownerShare.getShare() != null && ownerShare.getShare().getName() != null && ownerShare.getShare().getName().equals(previousShareName)) {
+//                    sharedShareCount++;
+//                    currentSharedShare.add(ownerShare);
+//                    System.out.println(sharedShareCount);
+//                } else {
+//                    for (OwnerShare ownerShareCurrent : currentSharedShare) {
+//                        ownerShareCurrent.setShareNominator(row.getCell(shareDenominatorColumn));
+//                        ownerShareCurrent.setShareDenominator(sharedShareCount);
+//                        ownerShareCurrent.setShareValue(1 / (double) sharedShareCount);
+//                    }
+//                    sharedShareCount = 0;
+//                    currentSharedShare = new ArrayList<>();
+//                    sharedShareCount++;
+//                    currentSharedShare.add(ownerShare);
+//                    System.out.println(sharedShareCount);
+//                }
+//                previousShareName = ownerShare.getShare().getName();
+//            }
+//
+//            for (OwnerShare ownerShareCurrent : currentSharedShare) {
+//                ownerShareCurrent.setShareNominator(1);
+//                ownerShareCurrent.setShareDenominator(sharedShareCount);
+//                ownerShareCurrent.setShareValue(1 / (double) sharedShareCount);
+//            }
 
             shareService.createShares(shareList);
             shareService.createOwnerShares(ownerShareList);
@@ -264,17 +275,11 @@ public class ShareController {
     @GetMapping("/addShare")
     public String addShare(Model model) {
 
-       //ShareDTO shareDTO=new ShareDTO();
-        //model.addAttribute("sharedto", shareDTO);
         Share share=new Share();
+        share.setActive(true);
         share.setType(Share.ShareType.RESIDENTAL);
         OwnerShare ownerShare=new OwnerShare();
         share.getOwnerShare().add(ownerShare);
-        Owner owner=new Owner();
-        ownerShare.setOwner(owner);
-        owner.setLastName("Göbäydullina");
-        ownerShare.setShare(share);
-
 
         model.addAttribute("share", share);
         return "addShare";
@@ -283,6 +288,7 @@ public class ShareController {
     @PostMapping("/addShare")
     @Transactional
     public String addShare(@ModelAttribute Share share) {
+        share.setActive(true);
         shareService.save(share);
         shareService.createOwnerShares(share.getOwnerShare(),share);
         shareService.calculateShareValues();

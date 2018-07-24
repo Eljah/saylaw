@@ -24,8 +24,8 @@ public class OwnerShare {
     private int shareNominator;
     private int shareDenominator;
     private double shareValue;
-    private int shareNominatorCommon;
-    private int shareDenominatorCommon;
+    private long shareNominatorCommon;
+    private long shareDenominatorCommon;
     private double shareValueCommon;
 
     @OneToOne

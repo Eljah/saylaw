@@ -46,17 +46,14 @@ public class ShareServiceImpl implements ShareService {
             if (!preexisting.contains(share)) {
                 shareRepository.save(share);
             } else {
-                for (Share preexistinForUpdate: preexisting)
-                {
-                    if (preexistinForUpdate.equals(share))
-                    {
-                        preexistinForUpdate=share.toBuilder().id(preexistinForUpdate.getId()).version(preexistinForUpdate.getVersion()).build();
+                for (Share preexistinForUpdate : preexisting) {
+                    if (preexistinForUpdate.equals(share)) {
+                        preexistinForUpdate = share.toBuilder().id(preexistinForUpdate.getId()).version(preexistinForUpdate.getVersion()).build();
                         //preexistinForUpdate=share.toBuilder().id(preexistinForUpdate.getId()).build();
-                        List <OwnerShare> ownerShareList=share.getOwnerShare();
-                                for (OwnerShare ownerShare: ownerShareList)
-                                {
-                                    ownerShare.setShare(preexistinForUpdate);
-                                }
+                        List<OwnerShare> ownerShareList = share.getOwnerShare();
+                        for (OwnerShare ownerShare : ownerShareList) {
+                            ownerShare.setShare(preexistinForUpdate);
+                        }
                         shareRepository.save(preexistinForUpdate);
                     }
                 }
@@ -89,42 +86,48 @@ public class ShareServiceImpl implements ShareService {
 
     @Override
     public void calculateShareValues() {
-        List<Share> allShares=shareRepository.findAll();
-        DenominatorFind denominatorFind=new DenominatorFind();
-        for (Share currentShare: allShares)
-        {
-            FloatNominatorDenominator currentFloatNominatorDenominator= new FloatNominatorDenominator();
+        List<Share> allShares = shareRepository.findByActiveIsTrue();
+        DenominatorFind denominatorFind = new DenominatorFind();
+        for (Share currentShare : allShares) {
+            FloatNominatorDenominator currentFloatNominatorDenominator = new FloatNominatorDenominator();
             currentFloatNominatorDenominator.setDoubleValue(currentShare.getArea());
             currentFloatNominatorDenominator.setDtoForBinding(currentShare);
             denominatorFind.allShares.add(currentFloatNominatorDenominator);
         }
         denominatorFind.processByFractional();
-        for (FloatNominatorDenominator currentFloatNominatorDenominator: denominatorFind.allShares)
-        {
-            ((Share)currentFloatNominatorDenominator.getDtoForBinding()).setShareValue(currentFloatNominatorDenominator.getDoubleFractional());
-            ((Share)currentFloatNominatorDenominator.getDtoForBinding()).setShareNominator(currentFloatNominatorDenominator.getNominatorValue());
-            ((Share)currentFloatNominatorDenominator.getDtoForBinding()).setShareDenominator(currentFloatNominatorDenominator.getDenominatorValue());
+        for (FloatNominatorDenominator currentFloatNominatorDenominator : denominatorFind.allShares) {
+            ((Share) currentFloatNominatorDenominator.getDtoForBinding()).setShareValue(currentFloatNominatorDenominator.getDoubleFractional());
+            ((Share) currentFloatNominatorDenominator.getDtoForBinding()).setShareNominator(currentFloatNominatorDenominator.getNominatorValue());
+            ((Share) currentFloatNominatorDenominator.getDtoForBinding()).setShareDenominator(currentFloatNominatorDenominator.getDenominatorValue());
         }
         shareRepository.saveAll(allShares);
 
-
+        List<Share> allSharesInactive = shareRepository.findByActiveIsFalse();
+        for (Share share : allSharesInactive) {
+            share.setShareValue(0);
+            share.setShareDenominator(0);
+            share.setShareNominator(0);
+        }
+        shareRepository.saveAll(allSharesInactive);
     }
 
     @Override
     public void calculateOwnerShareValues() {
-        List<OwnerShare> allShares=ownerShareRepository.findAll();
-        DenominatorFind denominatorFind=new DenominatorFind();
-        HashSet<Integer> denominators=new HashSet<>();
+        List<OwnerShare> allShares = ownerShareRepository.findByActiveIsTrue();
+        DenominatorFind denominatorFind = new DenominatorFind();
+        HashSet<Integer> denominators = new HashSet<>();
 
-        for (OwnerShare ownerShare: allShares)
-        {
+        for (OwnerShare ownerShare : allShares) {
+            ownerShare.setShareValue((double) ownerShare.getShareNominator() / (double) ownerShare.getShareDenominator());
             denominators.add(ownerShare.getShareDenominator());
-            ownerShare.setShareValueCommon(ownerShare.getShareNominator()*ownerShare.getShare().getShareValue()/ownerShare.getShareDenominator());
-            ownerShare.setShareDenominatorCommon(ownerShare.getShareDenominator()*ownerShare.getShare().getShareDenominator());
-            ownerShare.setShareNominatorCommon(ownerShare.getShareNominator()*ownerShare.getShare().getShareNominator());
-            System.out.println("Denominator:"+ownerShare.getShareDenominator());
+            ownerShare.setShareValueCommon(ownerShare.getShareNominator() * ownerShare.getShare().getShareValue() / ownerShare.getShareDenominator());
+            ownerShare.setShareDenominatorCommon(ownerShare.getShareDenominator() * ownerShare.getShare().getShareDenominator());
+            ownerShare.setShareNominatorCommon(ownerShare.getShareNominator() * ownerShare.getShare().getShareNominator());
+            System.out.println("Denominator:" + ownerShare.getShareDenominator());
         }
 
+        //прореживаем число делителей до самых больших не делящихся друг на друга
+        HashSet<Integer> denominators2 = denominatorFind.processDenominators(denominators);
 //        Set<Integer> rareDenomenators=new HashSet<>();
 
 //        for (Integer denominator: denominators)
@@ -138,28 +141,76 @@ public class ShareServiceImpl implements ShareService {
 //            }
 //        }
 
-        for (Integer denominator: denominators)
-        {
-            System.out.println("Denominator:"+denominator);
+        for (Integer denominator : denominators) {
+            System.out.println("Denominator:" + denominator);
             System.out.println();
             System.out.println();
-            for (OwnerShare ownerShare: allShares)
-            {
-                System.out.println("OwnerShare:"+ownerShare);
-                 if (denominator.equals(ownerShare.getShareDenominator())) {
-                     System.out.println("Denominator equals");
-                 }
-                else
-                 {
-                     System.out.println("Denominator not equals");
-                     ownerShare.setShareDenominatorCommon(ownerShare.getShareDenominatorCommon()*denominator);
-                     ownerShare.setShareNominatorCommon(ownerShare.getShareNominatorCommon()*denominator);
-                 }
-                System.out.println("OwnerShare:"+ownerShare);
+            for (OwnerShare ownerShare : allShares) {
+                System.out.println("OwnerShare:" + ownerShare);
+                //вычисляем наименьшее общее кратное обрабатываемого делителя и сравниваемого делителя текущей доли
+                //int factor=DenominatorFind.gcd2(denominator,ownerShare.getShareDenominator());
+                //если наименьшее общее кратное равно делитею текущей доли, то текущая доля - делитель обрабатываемого делителя
+                //и может быть выражена через обрабатываемый делитель домножением на коэффеициент
+                //if (factor==ownerShare.getShareDenominator()) {
+                //if (ownerShare.getShareDenominator() * ownerShare.getShare().getShareDenominator()==ownerShare.getShareDenominatorCommon()) {
+                //if (!denominators.contains(ownerShare.getShareDenominator())) {
+                //домножаем на коэффициент только те кратные текущим делителям, которые еще не домножали
+                //    ownerShare.setShareDenominatorCommon(ownerShare.getShareDenominatorCommon() * (denominator / factor));
+                //    ownerShare.setShareNominatorCommon(ownerShare.getShareNominatorCommon() * (denominator / factor))
+                //    ;
+                // }
+                // }
+                //else
+                //{
+                ownerShare.setShareDenominatorCommon(ownerShare.getShareDenominatorCommon() * (denominator));
+                ownerShare.setShareNominatorCommon(ownerShare.getShareNominatorCommon() * (denominator));
+                //}
             }
         }
+        for (Integer denominator : denominators2) {
+            System.out.println("Denominator:" + denominator);
+            System.out.println();
+            System.out.println();
+            for (OwnerShare ownerShare : allShares) {
+                System.out.println("OwnerShare:" + ownerShare);
+                //вычисляем наименьшее общее кратное обрабатываемого делителя и сравниваемого делителя текущей доли
+                //int factor=DenominatorFind.gcd2(denominator,ownerShare.getShareDenominator());
+                //если наименьшее общее кратное равно делитею текущей доли, то текущая доля - делитель обрабатываемого делителя
+                //и может быть выражена через обрабатываемый делитель домножением на коэффеициент
+                //if (factor==ownerShare.getShareDenominator()) {
+                //if (ownerShare.getShareDenominator() * ownerShare.getShare().getShareDenominator()==ownerShare.getShareDenominatorCommon()) {
+                //if (!denominators.contains(ownerShare.getShareDenominator())) {
+                //домножаем на коэффициент только те кратные текущим делителям, которые еще не домножали
+                //    ownerShare.setShareDenominatorCommon(ownerShare.getShareDenominatorCommon() * (denominator / factor));
+                //    ownerShare.setShareNominatorCommon(ownerShare.getShareNominatorCommon() * (denominator / factor))
+                //    ;
+                // }
+                // }
+                //else
+                //{
+                ownerShare.setShareDenominatorCommon(ownerShare.getShareDenominatorCommon() / (denominator));
+                ownerShare.setShareNominatorCommon(ownerShare.getShareNominatorCommon() / (denominator));
+                //}
+            }
+        }
+
+
+            for (OwnerShare ownerShare : allShares) {
+                System.out.println("OwnerShare:" + ownerShare);
+                ownerShare.setShareDenominatorCommon(ownerShare.getShareDenominatorCommon() / ownerShare.getShareDenominator());
+                ownerShare.setShareNominatorCommon(ownerShare.getShareNominatorCommon() / ownerShare.getShareDenominator());
+                //}
+            }
+
         ownerShareRepository.saveAll(allShares);
 
+        List<OwnerShare> allSharesInactive = ownerShareRepository.findByActiveIsFalse();
 
+        for (OwnerShare ownerShare : allSharesInactive) {
+            ownerShare.setShareValueCommon(0);
+            ownerShare.setShareDenominatorCommon(0);
+            ownerShare.setShareNominatorCommon(0);
+        }
+        ownerShareRepository.saveAll(allSharesInactive);
     }
 }
