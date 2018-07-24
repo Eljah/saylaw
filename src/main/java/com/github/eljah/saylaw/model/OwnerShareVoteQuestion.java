@@ -25,4 +25,7 @@ public class OwnerShareVoteQuestion {
     @ManyToOne
     private OwnerShare ownerShare;
     private boolean agree;
+
+    @ManyToOne
+    private OwnerShareVote ownerShareVote;
 }

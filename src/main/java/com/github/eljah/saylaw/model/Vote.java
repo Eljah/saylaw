@@ -48,7 +48,7 @@ public class Vote {
         PREPARED,
         INITATED,
         FINALIZED,
-        NOTIICE_SERVED,
+        NOTICE_SERVED,
         ON_SITE_RESULTS_OBTAINED,
         MAILBOX_RESULTS_OBTAINED
     }

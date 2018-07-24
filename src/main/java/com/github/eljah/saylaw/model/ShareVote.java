@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by eljah32 on 4/22/2018.
@@ -36,5 +37,12 @@ public class ShareVote {
     private boolean noticeServed;
 
     private boolean onSiteVote;
+
+    @OneToMany(mappedBy = "shareVote")
+    private List<OwnerShareVote> ownerShareVotes;
+
+    private long shareNominator;
+    private long shareDenominator;
+    private double shareValue;
 
 }

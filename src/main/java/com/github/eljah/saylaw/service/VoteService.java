@@ -18,4 +18,10 @@ public interface VoteService {
     ShareVote noticeServed(ShareVote shareVote);
 
     Vote allNoticesServed(Vote vote, Date dateNoticed) throws VoteProcessException;
+
+    Vote insertVoteResultsBatch(Vote vote);
+
+    ShareVote insertVoteResultPerShare(ShareVote shareVote);
+
+    Vote completeVoteResultsBatch(Vote vote);
 }
