@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.security.acl.*;
 import java.util.Date;
 import java.util.List;
 
@@ -37,5 +38,18 @@ public class Vote {
     @Temporal(TemporalType.DATE)
     Date voteValidThrough;
 
+    @OneToOne
+    Owner initiator;
 
+    VoteStatus status;
+
+    public enum VoteStatus
+    {
+        PREPARED,
+        INITATED,
+        FINALIZED,
+        NOTIICE_SERVED,
+        ON_SITE_RESULTS_OBTAINED,
+        MAILBOX_RESULTS_OBTAINED
+    }
 }

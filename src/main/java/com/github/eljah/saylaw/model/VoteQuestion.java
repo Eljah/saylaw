@@ -25,5 +25,5 @@ public class VoteQuestion {
     Vote vote;
 
     @OneToMany(mappedBy = "voteQuestion")
-    List<ShareVoteQuestion> shareVoteQuestions;
+    List<OwnerShareVoteQuestion> ownerShareVoteQuestions;
 }

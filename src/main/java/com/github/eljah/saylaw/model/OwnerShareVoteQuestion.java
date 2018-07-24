@@ -16,11 +16,13 @@ import javax.persistence.ManyToOne;
 @Setter
 @Getter
 @NoArgsConstructor
-public class ShareVoteQuestion {
+public class OwnerShareVoteQuestion {
     @Id
     @GeneratedValue
     private Long id;
     @ManyToOne
     private VoteQuestion voteQuestion;
+    @ManyToOne
+    private OwnerShare ownerShare;
     private boolean agree;
 }

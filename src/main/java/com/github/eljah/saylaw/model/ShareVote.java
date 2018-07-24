@@ -33,6 +33,8 @@ public class ShareVote {
     @OneToOne
     private ShareVoteProtocol protocol;
 
+    private boolean noticeServed;
+
     private boolean onSiteVote;
 
 }
