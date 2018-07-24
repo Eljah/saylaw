@@ -126,81 +126,38 @@ public class ShareServiceImpl implements ShareService {
             System.out.println("Denominator:" + ownerShare.getShareDenominator());
         }
 
-        //прореживаем число делителей до самых больших не делящихся друг на друга
         HashSet<Integer> denominators2 = denominatorFind.processDenominators(denominators);
-//        Set<Integer> rareDenomenators=new HashSet<>();
 
-//        for (Integer denominator: denominators)
-//        {
-//            for (Integer denominator2: denominators)
-//            {
-//                if (denominator>denominator2&&(denominator%denominator2)!=0)
-//                {
-//                    rareDenomenators.add(denominator);
-//                }
-//            }
-//        }
-
+        //умножение на все существующие делители
         for (Integer denominator : denominators) {
             System.out.println("Denominator:" + denominator);
             System.out.println();
             System.out.println();
             for (OwnerShare ownerShare : allShares) {
                 System.out.println("OwnerShare:" + ownerShare);
-                //вычисляем наименьшее общее кратное обрабатываемого делителя и сравниваемого делителя текущей доли
-                //int factor=DenominatorFind.gcd2(denominator,ownerShare.getShareDenominator());
-                //если наименьшее общее кратное равно делитею текущей доли, то текущая доля - делитель обрабатываемого делителя
-                //и может быть выражена через обрабатываемый делитель домножением на коэффеициент
-                //if (factor==ownerShare.getShareDenominator()) {
-                //if (ownerShare.getShareDenominator() * ownerShare.getShare().getShareDenominator()==ownerShare.getShareDenominatorCommon()) {
-                //if (!denominators.contains(ownerShare.getShareDenominator())) {
-                //домножаем на коэффициент только те кратные текущим делителям, которые еще не домножали
-                //    ownerShare.setShareDenominatorCommon(ownerShare.getShareDenominatorCommon() * (denominator / factor));
-                //    ownerShare.setShareNominatorCommon(ownerShare.getShareNominatorCommon() * (denominator / factor))
-                //    ;
-                // }
-                // }
-                //else
-                //{
                 ownerShare.setShareDenominatorCommon(ownerShare.getShareDenominatorCommon() * (denominator));
                 ownerShare.setShareNominatorCommon(ownerShare.getShareNominatorCommon() * (denominator));
-                //}
             }
         }
+
+        //сокращение всех общих множителей делителей
         for (Integer denominator : denominators2) {
             System.out.println("Denominator:" + denominator);
             System.out.println();
             System.out.println();
             for (OwnerShare ownerShare : allShares) {
                 System.out.println("OwnerShare:" + ownerShare);
-                //вычисляем наименьшее общее кратное обрабатываемого делителя и сравниваемого делителя текущей доли
-                //int factor=DenominatorFind.gcd2(denominator,ownerShare.getShareDenominator());
-                //если наименьшее общее кратное равно делитею текущей доли, то текущая доля - делитель обрабатываемого делителя
-                //и может быть выражена через обрабатываемый делитель домножением на коэффеициент
-                //if (factor==ownerShare.getShareDenominator()) {
-                //if (ownerShare.getShareDenominator() * ownerShare.getShare().getShareDenominator()==ownerShare.getShareDenominatorCommon()) {
-                //if (!denominators.contains(ownerShare.getShareDenominator())) {
-                //домножаем на коэффициент только те кратные текущим делителям, которые еще не домножали
-                //    ownerShare.setShareDenominatorCommon(ownerShare.getShareDenominatorCommon() * (denominator / factor));
-                //    ownerShare.setShareNominatorCommon(ownerShare.getShareNominatorCommon() * (denominator / factor))
-                //    ;
-                // }
-                // }
-                //else
-                //{
                 ownerShare.setShareDenominatorCommon(ownerShare.getShareDenominatorCommon() / (denominator));
                 ownerShare.setShareNominatorCommon(ownerShare.getShareNominatorCommon() / (denominator));
-                //}
             }
         }
 
-
-            for (OwnerShare ownerShare : allShares) {
-                System.out.println("OwnerShare:" + ownerShare);
-                ownerShare.setShareDenominatorCommon(ownerShare.getShareDenominatorCommon() / ownerShare.getShareDenominator());
-                ownerShare.setShareNominatorCommon(ownerShare.getShareNominatorCommon() / ownerShare.getShareDenominator());
-                //}
-            }
+        //приведение к нормированному виду за счет деления на изначальный делитель
+        for (OwnerShare ownerShare : allShares) {
+            System.out.println("OwnerShare:" + ownerShare);
+            ownerShare.setShareDenominatorCommon(ownerShare.getShareDenominatorCommon() / ownerShare.getShareDenominator());
+            ownerShare.setShareNominatorCommon(ownerShare.getShareNominatorCommon() / ownerShare.getShareDenominator());
+        }
 
         ownerShareRepository.saveAll(allShares);
 
