@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type='text/javascript'>
+        function addFields(){
+            // Number of inputs to create
+            var number = document.getElementById("member").value;
+            // Container <div> where dynamic content will be placed
+            var container = document.getElementById("container");
+            // Clear previous contents of the container
+            while (container.hasChildNodes()) {
+                container.removeChild(container.lastChild);
+            }
+            for (i=0;i<number;i++){
+                // Append a node with a random text
+                container.appendChild(document.createTextNode("Вопрос " + (i+1)));
+                // Create an <input> element, set its type and name attributes
+                var input = document.createElement("input");
+                input.type = "text";
+                input.name = "voteQuestions["+i+"].text";
+                input.id = "voteQuestions["+i+"].text";
+                container.appendChild(input);
+
+                txt = document.createTextNode(":");
+                container.appendChild(txt);
+                container.appendChild(input);
+                // Append a line break
+                container.appendChild(document.createElement("br"));
+            }
+        }
+    </script>
+</head>
+<body>
+<h1>Добавление нового голосования</h1>
+<form action="submit" th:action="@{/addVote}" th:object="${vote}" method="post">
+    <p>Общая тема голосования <input type="text" th:field="*{name}" /></p>
+    <p>Количество долей <input type="text" id="member" name="member" /></p>
+    <select th:field="*{initiator.id}">
+        <option th:each="owner : ${owners}"
+                th:value="${owner.id}"
+                >
+            <!--/*[[${owner.lastName}]] [[${owner.firstName}]] [[${owner.secondName}]] ([[${owner.ownerShare.share.name}]] - [[${owner.ownerShare.extractOfRegistry.ownershipCertificate}]]*/-->
+            [[${owner.lastName}]] [[${owner.firstName}]] [[${owner.secondName}]] ([[${owner.ownerShare.share.name}]])
+            )
+        </option>
+    </select>
+    <!--<div th:each="step, status : *{ownerShare}">
+        <input  type="text" th:field="*{ownerShare[__${status.index}__].shareNominator}" th:value="*{ownerShare[__${status.index}__].shareNominator}"/>
+        <input  type="text" th:field="*{ownerShare[__${status.index}__].shareDenominator}" th:value="*{ownerShare[__${status.index}__].shareDenominator}"/>
+        <input  type="text" th:field="*{ownerShare[__${status.index}__].owner.lastName}" th:value="*{ownerShare[__${status.index}__].owner.lastName}"/>
+    </div>-->
+    <br>
+    <a id="filldetails" onclick="addFields()">Добавить вопросы в список</a>
+    <br>
+    <p></p>
+    <div id="container"></div>
+    <input type="submit" value="Submit" /> <input type="reset" value="Reset" />
+</form>
+</body>
+
+</body>
+</html>

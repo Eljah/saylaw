@@ -24,4 +24,8 @@ public interface VoteService {
     ShareVote insertVoteResultPerShare(ShareVote shareVote);
 
     Vote completeVoteResultsBatch(Vote vote);
+
+    List<Owner> getAllOwners();
+
+    List<Vote> getAllVotes();
 }

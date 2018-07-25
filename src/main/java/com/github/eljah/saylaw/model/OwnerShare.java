@@ -31,7 +31,7 @@ public class OwnerShare {
     @OneToOne
     private Owner owner;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private Share share;
 
     private Boolean active;

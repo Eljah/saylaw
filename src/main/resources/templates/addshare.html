@@ -66,7 +66,7 @@
     </script>
 </head>
 <body>
-<h1>Form</h1>
+<h1>Добавление помещения в список долей многоквартирного дома</h1>
 <form action="submit" th:action="@{/addShare}" th:object="${share}" method="post">
     <p>Номер квартиры <input type="text" th:field="*{name}" /></p>
     <p>Площадь (формат записи 00.0) <input type="text" th:field="*{area}" /></p>

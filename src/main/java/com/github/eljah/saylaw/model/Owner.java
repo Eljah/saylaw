@@ -4,11 +4,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.data.repository.cdi.Eager;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -37,5 +35,7 @@ public class Owner {
     @OneToMany(mappedBy = "owner")
     private List<OwnerUserAssociation> ownerUserAssociations;
 
+    @OneToOne(mappedBy = "owner", fetch = FetchType.EAGER)
+    private OwnerShare ownerShare;
 
 }

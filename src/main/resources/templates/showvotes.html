@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Список проведенных голосований</title>
+</head>
+<body>
+<div th:if="${votes != null}">
+    <h1>Квартиры</h1>
+    <ul>
+        <li th:each="item : ${votes}">
+            <h2>[[${item.name}]] ([[${item.status}]])</h2>
+            <div th:if="${item != null && item.voteQuestions != null}">
+                <h3>Поставленные вопросы</h3>
+                <ul>
+                    <li th:each="question : ${item.voteQuestions}">[[${question.text}]]</li>
+                </ul>
+            </div>
+        </li>
+
+    </ul>
+</div>
+</body>
+</html>

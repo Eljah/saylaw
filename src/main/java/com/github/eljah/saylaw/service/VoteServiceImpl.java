@@ -3,6 +3,7 @@ package com.github.eljah.saylaw.service;
 import com.github.eljah.saylaw.model.*;
 import com.github.eljah.saylaw.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ import java.util.List;
 /**
  * Created by eljah32 on 7/24/2018.
  */
+@Service
 public class VoteServiceImpl implements VoteService {
 
     @Autowired
@@ -37,6 +39,9 @@ public class VoteServiceImpl implements VoteService {
 
     @Autowired
     VoteQuestionResultRepository voteQuestionResultRepository;
+
+    @Autowired
+    OwnerRepository ownerRepository;
 
     @Override
     @Transactional
@@ -220,5 +225,15 @@ public class VoteServiceImpl implements VoteService {
         vote.setStatus(Vote.VoteStatus.MAILBOX_RESULTS_OBTAINED);
         voteRepository.save(vote);
         return vote;
+    }
+
+    @Override
+    public List<Owner> getAllOwners() {
+        return ownerRepository.findAll();
+    }
+
+    @Override
+    public List<Vote> getAllVotes() {
+        return voteRepository.findAll();
     }
 }

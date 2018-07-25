@@ -65,6 +65,7 @@ public class ShareServiceImpl implements ShareService {
     @Override
     public void createOwnerShares(List<OwnerShare> ownerShares) {
         for (OwnerShare ownerShare : ownerShares) {
+            ownerShare.getOwner().setOwnerShare(ownerShare);
             ownerShareRepository.save(ownerShare);
             ownerRepository.save(ownerShare.getOwner());
 
@@ -76,10 +77,10 @@ public class ShareServiceImpl implements ShareService {
         for (OwnerShare ownerShare : ownerShares) {
             ownerShare.setActive(true);
             ownerShare.setShare(share);
+            ownerShare.getOwner().setOwnerShare(ownerShare);
             ownerRepository.save(ownerShare.getOwner());
             System.out.println(ownerShare.toString());
             ownerShareRepository.save(ownerShare);
-
         }
     }
 

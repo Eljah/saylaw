@@ -179,7 +179,7 @@ public class ShareController {
 
                         ownerShare.setActive(true);
                         ownerShare.setOwner(owner);
-                        //share.setOwnerShare(ownerShare);
+                        owner.setOwnerShare(ownerShare);
                         Share shareToAddToOwner = sharesMap.get(shareName);
                         if (shareToAddToOwner != null) {
                             ownerShare.setShare(shareToAddToOwner);
@@ -278,9 +278,6 @@ public class ShareController {
         Share share=new Share();
         share.setActive(true);
         share.setType(Share.ShareType.RESIDENTAL);
-        OwnerShare ownerShare=new OwnerShare();
-        share.getOwnerShare().add(ownerShare);
-
         model.addAttribute("share", share);
         return "addShare";
     }
@@ -294,18 +291,5 @@ public class ShareController {
         shareService.calculateShareValues();
         shareService.calculateOwnerShareValues();
         return "redirect:showAll";
-    }
-
-    @Setter
-    @Getter
-    class ShareDTO {
-        public Share share;
-        public List<OwnerShare> ownerShareList=new ArrayList<OwnerShare>() {};;
-
-        public ShareDTO() {
-            this.share = new Share();
-            this.ownerShareList.add(new OwnerShare());
-            this.share.setOwnerShare(ownerShareList);
-        }
     }
 }
