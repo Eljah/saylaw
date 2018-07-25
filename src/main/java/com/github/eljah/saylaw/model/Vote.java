@@ -3,6 +3,7 @@ package com.github.eljah.saylaw.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.security.acl.*;
@@ -30,12 +31,15 @@ public class Vote {
     List<VoteQuestion> voteQuestions;
 
     @Temporal(TemporalType.DATE)
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     Date voteInitiated;
 
     @Temporal(TemporalType.DATE)
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     Date voteOnsite;
 
     @Temporal(TemporalType.DATE)
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     Date voteValidThrough;
 
     @OneToOne

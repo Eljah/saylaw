@@ -36,7 +36,10 @@
 <h1>Добавление нового голосования</h1>
 <form action="submit" th:action="@{/addVote}" th:object="${vote}" method="post">
     <p>Общая тема голосования <input type="text" th:field="*{name}" /></p>
-    <p>Количество долей <input type="text" id="member" name="member" /></p>
+    <p>Количество вопросов <input type="text" id="member" name="member" /></p>
+    <p>Дата начала голосования <input type="datetime-local" th:field="*{voteInitiated}" /></p>
+    <p>Дата очного голосования <input type="datetime-local" th:field="*{voteOnsite}" /></p>
+    <p>Дата подведения итогов <input type="datetime-local" th:field="*{voteValidThrough}" /></p>
     <select th:field="*{initiator.id}">
         <option th:each="owner : ${owners}"
                 th:value="${owner.id}"
