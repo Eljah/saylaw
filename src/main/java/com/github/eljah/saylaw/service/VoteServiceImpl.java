@@ -206,7 +206,7 @@ public class VoteServiceImpl implements VoteService {
             {
                 long commonDenominator=ownerShareVoteQuestion.getOwnerShare().getShareDenominatorCommon();
                 voteQuestionResult.setDenominator(commonDenominator);
-                if (ownerShareVoteQuestion.isAgree())
+                if (ownerShareVoteQuestion.getAgree())
                 {
                     voteQuestionResult.setNomintorPro(voteQuestionResult.getNomintorPro()+ownerShareVoteQuestion.getOwnerShare().getShareNominatorCommon());
                 }
@@ -235,5 +235,10 @@ public class VoteServiceImpl implements VoteService {
     @Override
     public List<Vote> getAllVotes() {
         return voteRepository.findAll();
+    }
+
+    @Override
+    public Vote getVoteById(Long id) {
+        return voteRepository.getOne(id);
     }
 }

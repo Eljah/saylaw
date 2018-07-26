@@ -10,6 +10,9 @@
     <ul>
         <li th:each="item : ${votes}">
             <h2>[[${item.name}]] ([[${item.status}]])</h2>
+
+            <a th:href="@{'/makeVoteProtocol?voteId=' + ${item.id}}">Создать протокол</a>
+            <br>
             <div th:if="${item != null && item.voteQuestions != null}">
                 <h3>Поставленные вопросы</h3>
                 <ul>

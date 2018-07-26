@@ -3,6 +3,7 @@ package com.github.eljah.saylaw.controller;
 import com.github.eljah.saylaw.model.Owner;
 import com.github.eljah.saylaw.model.OwnerShare;
 import com.github.eljah.saylaw.model.Vote;
+import com.github.eljah.saylaw.model.VoteProcessException;
 import com.github.eljah.saylaw.service.VoteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,6 +13,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -51,6 +53,15 @@ public class VoteController {
     @GetMapping("/showVotes")
     public String showVotes(Model model) {
 
+        List<Vote> votes=voteService.getAllVotes();
+        model.addAttribute("votes", votes);
+        return "showVotes";
+    }
+
+    @GetMapping("/makeVoteProtocol")
+    public String makeVoteProtocol(@RequestParam("voteId") Long voteId, Model model) throws VoteProcessException {
+        Vote vote=voteService.getVoteById(voteId);
+        voteService.makeVoteProtocol(vote);
         List<Vote> votes=voteService.getAllVotes();
         model.addAttribute("votes", votes);
         return "showVotes";

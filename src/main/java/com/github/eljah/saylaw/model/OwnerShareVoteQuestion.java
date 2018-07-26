@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.Null;
 
 /**
  * Created by eljah32 on 4/23/2018.
@@ -24,7 +25,9 @@ public class OwnerShareVoteQuestion {
     private VoteQuestion voteQuestion;
     @ManyToOne
     private OwnerShare ownerShare;
-    private boolean agree;
+
+    @Null
+    private Boolean agree;
 
     @ManyToOne
     private OwnerShareVote ownerShareVote;

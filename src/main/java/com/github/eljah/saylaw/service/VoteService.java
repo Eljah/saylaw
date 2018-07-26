@@ -28,4 +28,6 @@ public interface VoteService {
     List<Owner> getAllOwners();
 
     List<Vote> getAllVotes();
+
+    Vote getVoteById(Long id);
 }
