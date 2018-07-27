@@ -26,7 +26,6 @@ public class OwnerShareVoteQuestion {
     @ManyToOne
     private OwnerShare ownerShare;
 
-    @Null
     private Boolean agree;
 
     @ManyToOne

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Результаты голосования: общее редактирование</title>
+</head>
+<body>
+<div th:if="${vote != null}">
+    <form action="submit" th:action="@{/insertVoteResults}" th:object="${vote}" method="post">
+        <input type="hidden" th:field="*{name}" th:value="*{name}"/>
+        <h1>Помещения:</h1>
+        <ul>
+            <li th:each="item, status0 : ${vote.shareVotes}">
+                <h2>[[${item.share.name}]] ([[${item.share.area}]])</h2>
+
+                <div th:if="${item != null && item.share != null}">
+                    <h3>Доли владения</h3>
+                    <table>
+                        <tr>
+                            <th>Владелец и описание доли</th>
+                            <th th:each="votequestion : ${vote.voteQuestions}">[[${votequestion.text}]]</th>
+                        </tr>
+                        <tr th:each="ownersharevote, status1 : ${item.ownerShareVotes}">
+                            <td>[[${ownersharevote.ownerShare.owner.firstName}]]
+                                [[${ownersharevote.ownerShare.owner.secondName}]]
+                                [[${ownersharevote.ownerShare.owner.lastName}]]
+                                [[${ownersharevote.shareNominatorCommon}]]/[[${ownersharevote.shareDenominatorCommon}]]
+                                ([[${ownersharevote.shareNominator}]]/[[${ownersharevote.shareDenominator}]])
+                            </td>
+                            <td th:each="question, status2 : ${ownersharevote.ownerShareVoteQuestion}">
+                                <!--/*<input type="checkbox" th:field="${question.agree}"/>*/-->
+                                <input type="checkbox"
+                                       th:path="*{shareVotes[__${status0.index}__].ownerShareVotes[__${status1.index}__].ownerShareVoteQuestion[__${status2.index}__].agree}" th:field="*{shareVotes[__${status0.index}__].ownerShareVotes[__${status1.index}__].ownerShareVoteQuestion[__${status2.index}__].agree}"/>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+        </ul>
+        <input type="submit" value="Submit" /> <input type="reset" value="Reset" />
+    </form>
+</div>
+</body>
+</html>

@@ -10,17 +10,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 /**
  * Created by eljah32 on 7/25/2018.
  */
 @Controller
+@SessionAttributes("vote")
 public class VoteController {
 
     @Autowired
@@ -30,14 +29,14 @@ public class VoteController {
     @Transactional
     public String addShare(Model model) {
 
-        Vote vote=new Vote();
+        Vote vote = new Vote();
         model.addAttribute("vote", vote);
-        List<Owner> owners=voteService.getAllOwners();
+        List<Owner> owners = voteService.getAllOwners();
         //for (Owner owner: owners)
         //{
         //    owner.getOwnerShare();
         //}
-        model.addAttribute("owners",owners);
+        model.addAttribute("owners", owners);
         return "addVote";
     }
 
@@ -46,24 +45,60 @@ public class VoteController {
         if (result.hasErrors()) {
             System.out.println(result.toString());
         }
-            voteService.newVote(vote);
+        voteService.newVote(vote);
         return "redirect:showVotes";
     }
 
     @GetMapping("/showVotes")
     public String showVotes(Model model) {
 
-        List<Vote> votes=voteService.getAllVotes();
+        List<Vote> votes = voteService.getAllVotes();
         model.addAttribute("votes", votes);
         return "showVotes";
     }
 
     @GetMapping("/makeVoteProtocol")
     public String makeVoteProtocol(@RequestParam("voteId") Long voteId, Model model) throws VoteProcessException {
-        Vote vote=voteService.getVoteById(voteId);
+        Vote vote = voteService.getVoteById(voteId);
         voteService.makeVoteProtocol(vote);
-        List<Vote> votes=voteService.getAllVotes();
+        List<Vote> votes = voteService.getAllVotes();
         model.addAttribute("votes", votes);
         return "showVotes";
+    }
+
+    @GetMapping("/finalizeVoteProtocol")
+    public String finalizeVoteProtocol(@RequestParam("voteId") Long voteId, Model model) throws VoteProcessException {
+        Vote vote = voteService.getVoteById(voteId);
+        voteService.finalizeVoteProtocol(vote);
+        List<Vote> votes = voteService.getAllVotes();
+        model.addAttribute("votes", votes);
+        return "showVotes";
+    }
+
+    @GetMapping("/allNoticesServed")
+    public String allNoticesServed(@RequestParam("voteId") Long voteId, Model model) throws VoteProcessException {
+        Vote vote = voteService.getVoteById(voteId);
+        voteService.allNoticesServed(vote, new Date());
+        List<Vote> votes = voteService.getAllVotes();
+        model.addAttribute("votes", votes);
+        return "showVotes";
+    }
+
+    @GetMapping("/insertVoteResults")
+    public String insertVoteResults(@RequestParam("voteId") Long voteId, Model model) {
+        Vote vote = voteService.getVoteById(voteId);
+        model.addAttribute("vote", vote);
+        return "insertVoteResults";
+    }
+
+    @PostMapping("/insertVoteResults")
+    public String insertVoteResults(@ModelAttribute Vote vote, BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            model.addAttribute("vote",vote);
+            return "insertVoteResults";
+        } else {
+            voteService.insertVoteResultsBatch(vote);
+            return "showVotes";
+        }
     }
 }

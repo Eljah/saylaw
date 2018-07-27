@@ -2,6 +2,7 @@ package com.github.eljah.saylaw.service;
 
 import com.github.eljah.saylaw.model.*;
 import com.github.eljah.saylaw.repository.*;
+import org.hibernate.annotations.SourceType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,6 +43,9 @@ public class VoteServiceImpl implements VoteService {
 
     @Autowired
     OwnerRepository ownerRepository;
+
+    @Autowired
+    ProtocolRepository protocolRepository;
 
     @Override
     @Transactional
@@ -106,6 +110,7 @@ public class VoteServiceImpl implements VoteService {
                 //generatefile there
                 //todo generate ShareVoteProtocols per Share
                 shareVote.setProtocol(shareVoteProtocol);
+                protocolRepository.save(shareVoteProtocol);
             }
             vote.setStatus(Vote.VoteStatus.FINALIZED);
             voteRepository.save(vote);
@@ -143,8 +148,10 @@ public class VoteServiceImpl implements VoteService {
     @Transactional
     public Vote insertVoteResultsBatch(Vote vote) {
         List<ShareVote> shareVotes= vote.getShareVotes();
+        System.out.println(vote.toString());
         for (ShareVote shareVote: shareVotes)
         {
+            System.out.println(shareVote.toString());
             shareVote.setShareNominator(shareVote.getShare().getShareNominator());
             shareVote.setShareDenominator(shareVote.getShare().getShareDenominator());
             shareVote.setShareValue(shareVote.getShare().getShareValue());

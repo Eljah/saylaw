@@ -3,6 +3,7 @@ package com.github.eljah.saylaw.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -15,6 +16,7 @@ import java.util.List;
 @Setter
 @Getter
 @NoArgsConstructor
+//@ToString
 public class ShareVote {
     @Id
     @GeneratedValue
