@@ -23,7 +23,7 @@ public interface VoteService {
 
     ShareVote insertVoteResultPerShare(ShareVote shareVote);
 
-    Vote completeVoteResultsBatch(Vote vote);
+    Vote completeVoteResultsBatch(Vote vote) throws VoteProcessException;
 
     List<Owner> getAllOwners();
 

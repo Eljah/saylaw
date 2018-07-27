@@ -15,6 +15,7 @@
             <a th:href="@{'/finalizeVoteProtocol?voteId=' + ${item.id}}">Утвердить окончательный вид протокола</a>
             <a th:href="@{'/allNoticesServed?voteId=' + ${item.id}}">Бюллютени голосования вручены всем</a>
             <a th:href="@{'/insertVoteResults?voteId=' + ${item.id}}">Заполнение вариантов ответов</a>
+            <a th:href="@{'/сompleteVoteResults?voteId=' + ${item.id}}">Вычислить окончательный результат голосования</a>
             <br>
             <div th:if="${item != null && item.voteQuestions != null}">
                 <h3>Поставленные вопросы</h3>

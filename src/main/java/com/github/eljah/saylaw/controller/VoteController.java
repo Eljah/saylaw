@@ -63,7 +63,7 @@ public class VoteController {
         voteService.makeVoteProtocol(vote);
         List<Vote> votes = voteService.getAllVotes();
         model.addAttribute("votes", votes);
-        return "showVotes";
+        return "redirect:showVotes";
     }
 
     @GetMapping("/finalizeVoteProtocol")
@@ -72,7 +72,7 @@ public class VoteController {
         voteService.finalizeVoteProtocol(vote);
         List<Vote> votes = voteService.getAllVotes();
         model.addAttribute("votes", votes);
-        return "showVotes";
+        return "redirect:showVotes";
     }
 
     @GetMapping("/allNoticesServed")
@@ -81,7 +81,7 @@ public class VoteController {
         voteService.allNoticesServed(vote, new Date());
         List<Vote> votes = voteService.getAllVotes();
         model.addAttribute("votes", votes);
-        return "showVotes";
+        return "redirect:showVotes";
     }
 
     @GetMapping("/insertVoteResults")
@@ -98,7 +98,18 @@ public class VoteController {
             return "insertVoteResults";
         } else {
             voteService.insertVoteResultsBatch(vote);
-            return "showVotes";
+            List<Vote> votes = voteService.getAllVotes();
+            model.addAttribute("votes", votes);
+            return "redirect:showVotes";
         }
+    }
+
+    @GetMapping("/сompleteVoteResults")
+    public String сompleteVoteResults(@RequestParam("voteId") Long voteId, Model model) throws VoteProcessException {
+        Vote vote = voteService.getVoteById(voteId);
+        voteService.completeVoteResultsBatch(vote);
+        List<Vote> votes = voteService.getAllVotes();
+        model.addAttribute("votes", votes);
+        return "redirect:showVotes";
     }
 }

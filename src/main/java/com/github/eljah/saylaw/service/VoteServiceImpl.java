@@ -198,39 +198,39 @@ public class VoteServiceImpl implements VoteService {
 
     @Override
     @Transactional
-    public Vote completeVoteResultsBatch(Vote vote) {
-        //todo generate Vote Protocol
-        //todo generate VoteQuestion Protocol
-        VoteResult voteResult=new VoteResult();
+    public Vote completeVoteResultsBatch(Vote vote) throws VoteProcessException {
+        if (vote.getStatus() == Vote.VoteStatus.ON_SITE_RESULTS_OBTAINED) {
+            //todo generate Vote Protocol
+            //todo generate VoteQuestion Protocol
+            VoteResult voteResult = new VoteResult();
 
-        List<VoteQuestionResult> voteQuestionResults=new ArrayList<>();
-        for (VoteQuestion voteQuestion: vote.getVoteQuestions())
-        {
-            VoteQuestionResult voteQuestionResult=new VoteQuestionResult();
-            voteQuestionResults.add(voteQuestionResult);
-            List<OwnerShareVoteQuestion> ownerShareVoteQuestions=voteQuestion.getOwnerShareVoteQuestions();
-            for (OwnerShareVoteQuestion ownerShareVoteQuestion: ownerShareVoteQuestions)
-            {
-                long commonDenominator=ownerShareVoteQuestion.getOwnerShare().getShareDenominatorCommon();
-                voteQuestionResult.setDenominator(commonDenominator);
-                if (ownerShareVoteQuestion.getAgree())
-                {
-                    voteQuestionResult.setNomintorPro(voteQuestionResult.getNomintorPro()+ownerShareVoteQuestion.getOwnerShare().getShareNominatorCommon());
+            List<VoteQuestionResult> voteQuestionResults = new ArrayList<>();
+            for (VoteQuestion voteQuestion : vote.getVoteQuestions()) {
+                VoteQuestionResult voteQuestionResult = new VoteQuestionResult();
+                voteQuestionResults.add(voteQuestionResult);
+                List<OwnerShareVoteQuestion> ownerShareVoteQuestions = voteQuestion.getOwnerShareVoteQuestions();
+                for (OwnerShareVoteQuestion ownerShareVoteQuestion : ownerShareVoteQuestions) {
+                    long commonDenominator = ownerShareVoteQuestion.getOwnerShare().getShareDenominatorCommon();
+                    voteQuestionResult.setDenominator(commonDenominator);
+                    if (ownerShareVoteQuestion.getAgree()) {
+                        voteQuestionResult.setNomintorPro(voteQuestionResult.getNomintorPro() + ownerShareVoteQuestion.getOwnerShare().getShareNominatorCommon());
+                    } else {
+                        voteQuestionResult.setNomintorContra(voteQuestionResult.getNomintorContra() + ownerShareVoteQuestion.getOwnerShare().getShareNominatorCommon());
+                    }
                 }
-                else
-                {
-                    voteQuestionResult.setNomintorContra(voteQuestionResult.getNomintorContra()+ownerShareVoteQuestion.getOwnerShare().getShareNominatorCommon());
-                }
+                voteQuestionResult.setPro(voteQuestionResult.getNomintorPro() > voteQuestionResult.getNomintorContra());
+                voteQuestionResult.setValuePro((double) voteQuestionResult.getNomintorPro() / (double) voteQuestionResult.getDenominator());
+                voteQuestionResult.setValueContra((double) voteQuestionResult.getNomintorContra() / (double) voteQuestionResult.getDenominator());
+                voteQuestionResult.setVoteResult(voteResult);
             }
-            voteQuestionResult.setPro(voteQuestionResult.getNomintorPro()>voteQuestionResult.getNomintorContra());
-            voteQuestionResult.setValuePro((double)voteQuestionResult.getNomintorPro()/(double)voteQuestionResult.getDenominator());
-            voteQuestionResult.setValueContra((double)voteQuestionResult.getNomintorContra()/(double)voteQuestionResult.getDenominator());
+            voteQuestionResultRepository.saveAll(voteQuestionResults);
+            voteResult.setVoteQuestionResults(voteQuestionResults);
+            voteResult.setVote(vote);
+            voteResultRepository.save(voteResult);
+            vote.setStatus(Vote.VoteStatus.MAILBOX_RESULTS_OBTAINED);
+            voteRepository.save(vote);
         }
-        voteQuestionResultRepository.saveAll(voteQuestionResults);
-        voteResult.setVoteQuestionResults(voteQuestionResults);
-        voteResultRepository.save(voteResult);
-        vote.setStatus(Vote.VoteStatus.MAILBOX_RESULTS_OBTAINED);
-        voteRepository.save(vote);
+        else  throw new VoteProcessException();
         return vote;
     }
 
