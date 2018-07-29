@@ -70,8 +70,9 @@ public class VoteController {
     public String viewVoteProtocol(@RequestParam("voteId") Long voteId, Model model) throws VoteProcessException {
         Vote vote = voteService.getVoteById(voteId);
         model.addAttribute("vote", vote);
+        model.addAttribute("name", vote.getName());
         model.addAttribute("__filename", new Date());
-        return "voteProtocol";
+        return "voteProtocol2";
     }
 
     @GetMapping("/finalizeVoteProtocol")
