@@ -12,6 +12,7 @@
             <h2>[[${item.name}]] ([[${item.status}]])</h2>
 
             <a th:href="@{'/makeVoteProtocol?voteId=' + ${item.id}}">Создать протокол</a>
+            <a th:href="@{'/viewVoteProtocol?voteId=' + ${item.id}}">Просмотреть протокол в формате MS Word</a>
             <a th:href="@{'/finalizeVoteProtocol?voteId=' + ${item.id}}">Утвердить окончательный вид протокола</a>
             <a th:href="@{'/allNoticesServed?voteId=' + ${item.id}}">Бюллютени голосования вручены всем</a>
             <a th:href="@{'/insertVoteResults?voteId=' + ${item.id}}">Заполнение вариантов ответов</a>

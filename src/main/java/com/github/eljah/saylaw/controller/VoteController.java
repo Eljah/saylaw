@@ -66,6 +66,14 @@ public class VoteController {
         return "redirect:showVotes";
     }
 
+    @GetMapping(path = "/viewVoteProtocol", produces = "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
+    public String viewVoteProtocol(@RequestParam("voteId") Long voteId, Model model) throws VoteProcessException {
+        Vote vote = voteService.getVoteById(voteId);
+        model.addAttribute("vote", vote);
+        model.addAttribute("__filename", new Date());
+        return "voteProtocol";
+    }
+
     @GetMapping("/finalizeVoteProtocol")
     public String finalizeVoteProtocol(@RequestParam("voteId") Long voteId, Model model) throws VoteProcessException {
         Vote vote = voteService.getVoteById(voteId);
