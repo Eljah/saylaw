@@ -32,6 +32,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     }
 
 
+    //that is a default pre-cobnfigured html resolver
     @Autowired
     ViewResolver thymeleafViewResolver;
 
@@ -52,21 +53,14 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     }
 
     /*
-     * Configure View resolver to provide Csv output using Super Csv library to
-     * generate Csv output for an object content
+     * Configure View resolver to provide Docx output using Apache POI to
+     * generate Docx output for an object content
      */
     @Bean
     public ViewResolver docxViewResolver() {
         return new DocxViewResolver();
     }
 
-//    @Bean
-//    public ViewResolver getViewResolver() {
-//        InternalResourceViewResolver resolver = new InternalResourceViewResolver();
-//        resolver.setPrefix("/templates/");
-//        resolver.setSuffix(".html");
-//        return resolver;
-//    }
 
     @Override
     public void configureDefaultServletHandling(
