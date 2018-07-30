@@ -61,7 +61,6 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         return new DocxViewResolver();
     }
 
-
     @Override
     public void configureDefaultServletHandling(
             DefaultServletHandlerConfigurer configurer) {

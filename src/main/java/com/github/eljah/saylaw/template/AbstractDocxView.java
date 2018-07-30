@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.swing.text.Document;
 import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
 import java.util.Map;
 
 /**
@@ -42,7 +43,7 @@ abstract public class AbstractDocxView extends AbstractView {
         buildDocxDocument(model, request, response);
     }
 
-
+    public abstract void buildDocxDocument(Map<String, Object> model, OutputStream outputStream) throws Exception;
 
     protected abstract void buildDocxDocument(
             Map<String, Object> model, HttpServletRequest request, HttpServletResponse response)

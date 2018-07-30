@@ -2,14 +2,17 @@ package com.github.eljah.saylaw.service;
 
 import com.github.eljah.saylaw.model.*;
 import com.github.eljah.saylaw.repository.*;
+import com.github.eljah.saylaw.template.AbstractDocxView;
+import com.github.eljah.saylaw.template.DocxBinaryGenerator;
 import org.hibernate.annotations.SourceType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.io.ByteArrayOutputStream;
+import java.sql.Blob;
+import java.sql.SQLException;
+import java.util.*;
 
 /**
  * Created by eljah32 on 7/24/2018.
@@ -46,6 +49,9 @@ public class VoteServiceImpl implements VoteService {
 
     @Autowired
     ProtocolRepository protocolRepository;
+
+    @Autowired
+    DocxBinaryGenerator docxBinaryGenerator;
 
     @Override
     @Transactional
@@ -103,10 +109,16 @@ public class VoteServiceImpl implements VoteService {
     }
 
     @Override
-    public Vote finalizeVoteProtocol(Vote vote) throws VoteProcessException {
+    public Vote finalizeVoteProtocol(Vote vote) throws Exception {
         if (vote.getStatus() == Vote.VoteStatus.INITATED) {
             for (ShareVote shareVote : vote.getShareVotes()) {
                 ShareVoteProtocol shareVoteProtocol= new ShareVoteProtocol();
+                ByteArrayOutputStream byteArrayOutputStream=new ByteArrayOutputStream();
+                shareVoteProtocol.setFile(byteArrayOutputStream.toByteArray());
+                Map<String,Object> map=new HashMap<>();
+                map.put("name",vote.getName());
+                docxBinaryGenerator.
+                        prepareBinaryOutputStream("voteProtocol2",map,byteArrayOutputStream);
                 //generatefile there
                 //todo generate ShareVoteProtocols per Share
                 shareVote.setProtocol(shareVoteProtocol);

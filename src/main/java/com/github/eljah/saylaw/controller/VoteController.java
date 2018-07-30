@@ -76,10 +76,12 @@ public class VoteController {
     }
 
     @GetMapping("/finalizeVoteProtocol")
-    public String finalizeVoteProtocol(@RequestParam("voteId") Long voteId, Model model) throws VoteProcessException {
+    public String finalizeVoteProtocol(@RequestParam("voteId") Long voteId, Model model) throws Exception {
         Vote vote = voteService.getVoteById(voteId);
         voteService.finalizeVoteProtocol(vote);
         List<Vote> votes = voteService.getAllVotes();
+        model.addAttribute("vote", vote);
+        model.addAttribute("name", vote.getName());
         model.addAttribute("votes", votes);
         return "redirect:showVotes";
     }

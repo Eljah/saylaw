@@ -7,6 +7,7 @@ import com.github.eljah.saylaw.model.Share;
 import com.github.eljah.saylaw.repository.OwnerRepository;
 import com.github.eljah.saylaw.repository.OwnerShareRepository;
 import com.github.eljah.saylaw.repository.ShareRepository;
+import com.github.eljah.saylaw.template.AbstractDocxView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

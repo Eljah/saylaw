@@ -2,6 +2,7 @@ package com.github.eljah.saylaw.service;
 
 import com.github.eljah.saylaw.model.*;
 
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
@@ -13,7 +14,7 @@ public interface VoteService {
 
     Vote makeVoteProtocol(Vote vote) throws VoteProcessException;
 
-    Vote finalizeVoteProtocol(Vote vote) throws VoteProcessException;
+    Vote finalizeVoteProtocol(Vote vote) throws Exception;
 
     ShareVote noticeServed(ShareVote shareVote);
 
