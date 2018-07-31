@@ -3,6 +3,7 @@ package com.github.eljah.saylaw.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.context.annotation.Lazy;
 
 import javax.persistence.*;
 
@@ -25,6 +26,6 @@ public abstract class Protocol {
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "PROTOCOL_GEN")
     private Long id;
 
-    @Lob
+    @Lazy
     private byte[] file;
 }

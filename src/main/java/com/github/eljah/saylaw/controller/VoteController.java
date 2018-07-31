@@ -32,10 +32,6 @@ public class VoteController {
         Vote vote = new Vote();
         model.addAttribute("vote", vote);
         List<Owner> owners = voteService.getAllOwners();
-        //for (Owner owner: owners)
-        //{
-        //    owner.getOwnerShare();
-        //}
         model.addAttribute("owners", owners);
         return "addVote";
     }
@@ -66,6 +62,9 @@ public class VoteController {
         return "redirect:showVotes";
     }
 
+    //NB!
+    //this is the controller that returns non usual view, non-html
+    //it returns docx view and "produces =" parameter is needed, it doesn't work correctly without it
     @GetMapping(path = "/viewVoteProtocol", produces = "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
     public String viewVoteProtocol(@RequestParam("voteId") Long voteId, Model model) throws VoteProcessException {
         Vote vote = voteService.getVoteById(voteId);
@@ -122,5 +121,12 @@ public class VoteController {
         List<Vote> votes = voteService.getAllVotes();
         model.addAttribute("votes", votes);
         return "redirect:showVotes";
+    }
+
+    @GetMapping("/voteDetails")
+    public String voteDetails(@RequestParam("voteId") Long voteId, Model model) throws VoteProcessException {
+        Vote vote = voteService.getVoteById(voteId);
+        model.addAttribute("vote", vote);
+        return "voteDetails";
     }
 }

@@ -3,6 +3,7 @@ package com.github.eljah.saylaw.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.context.annotation.Lazy;
 
 import javax.persistence.*;
 
@@ -31,5 +32,6 @@ public class VoteQuestionResult {
     double valueContra;
 
     @OneToOne
+    @Lazy
     VoteQuestionProtocol voteQuestionProtocol;
 }
