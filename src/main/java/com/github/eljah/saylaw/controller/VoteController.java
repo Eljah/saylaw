@@ -19,7 +19,7 @@ import java.util.List;
  * Created by eljah32 on 7/25/2018.
  */
 @Controller
-@SessionAttributes("vote")
+@SessionAttributes("voteR")
 public class VoteController {
 
     @Autowired
@@ -97,7 +97,7 @@ public class VoteController {
     @GetMapping("/insertVoteResults")
     public String insertVoteResults(@RequestParam("voteId") Long voteId, Model model) {
         Vote vote = voteService.getVoteById(voteId);
-        model.addAttribute("vote", vote);
+        model.addAttribute("voteR", vote);
         return "insertVoteResults";
     }
 
