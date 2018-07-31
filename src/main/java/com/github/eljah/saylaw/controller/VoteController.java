@@ -127,6 +127,8 @@ public class VoteController {
     public String voteDetails(@RequestParam("voteId") Long voteId, Model model) throws VoteProcessException {
         Vote vote = voteService.getVoteById(voteId);
         model.addAttribute("vote", vote);
+        List<Owner> owners = voteService.getAllOwners();
+        model.addAttribute("owners", owners);
         return "voteDetails";
     }
 }
