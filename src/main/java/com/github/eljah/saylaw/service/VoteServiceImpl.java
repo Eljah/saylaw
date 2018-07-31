@@ -120,11 +120,13 @@ public class VoteServiceImpl implements VoteService {
             for (ShareVote shareVote : vote.getShareVotes()) {
                 ShareVoteProtocol shareVoteProtocol= new ShareVoteProtocol();
                 ByteArrayOutputStream byteArrayOutputStream=new ByteArrayOutputStream();
-                shareVoteProtocol.setFile(byteArrayOutputStream.toByteArray());
                 Map<String,Object> map=new HashMap<>();
                 map.put("name",vote.getName());
                 docxBinaryGenerator.
                         prepareBinaryOutputStream("voteProtocol2",map,byteArrayOutputStream);
+                shareVoteProtocol.setFile(byteArrayOutputStream.toByteArray());
+                byteArrayOutputStream.flush();
+                byteArrayOutputStream.close();
                 //generatefile there
                 //todo generate ShareVoteProtocols per Share
                 shareVote.setProtocol(shareVoteProtocol);
@@ -271,5 +273,10 @@ public class VoteServiceImpl implements VoteService {
     @Override
     public Vote getVoteById(Long id) {
         return voteRepository.getOne(id);
+    }
+
+    @Override
+    public Protocol getProtocolById(Long id) {
+        return protocolRepository.getOne(id);
     }
 }

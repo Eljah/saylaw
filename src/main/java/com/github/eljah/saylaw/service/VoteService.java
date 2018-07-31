@@ -35,4 +35,6 @@ public interface VoteService {
     List<Vote> getAllActiveVotes();
 
     Vote getVoteById(Long id);
+
+    Protocol getProtocolById(Long id);
 }

@@ -1,9 +1,6 @@
 package com.github.eljah.saylaw.controller;
 
-import com.github.eljah.saylaw.model.Owner;
-import com.github.eljah.saylaw.model.OwnerShare;
-import com.github.eljah.saylaw.model.Vote;
-import com.github.eljah.saylaw.model.VoteProcessException;
+import com.github.eljah.saylaw.model.*;
 import com.github.eljah.saylaw.service.VoteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,6 +9,9 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -39,7 +39,7 @@ public class VoteController {
     @PostMapping("/addVote")
     public String addShare(@ModelAttribute Vote vote, BindingResult result) {
         if (result.hasErrors()) {
-            System.out.println(result.toString());
+            return "voteDetails";
         }
         voteService.newVote(vote);
         return "redirect:showVotes";
@@ -74,6 +74,26 @@ public class VoteController {
         return "voteProtocol2";
     }
 
+    //NB!
+    //this is the controller that returns non usual view, non-html
+    //it returns docx view and "produces =" parameter is needed, it doesn't work correctly without it
+    @GetMapping(path = "/viewVoteShareProtocol")
+    @ResponseBody
+    public void viewVoteShareProtocol(HttpServletRequest request, HttpServletResponse response, @RequestParam("voteShareProtocolId") Long voteShareProtocolId, @RequestParam("filename") String filename) throws VoteProcessException {
+        Protocol protocol = voteService.getProtocolById(voteShareProtocolId);
+        byte[] file = protocol.getFile();
+        response.reset();
+        //response.setBufferSize(DEFAULT_BUFFER_SIZE);
+        response.setHeader("Content-Disposition", "attachment; filename=\"" + filename + ".docx\"");
+        response.setContentType("application/vnd.openxmlformats-officedocument.wordprocessingml.document"); //or whatever file type you want to send.
+        try {
+            response.getOutputStream().write(file);
+        } catch (IOException e) {
+            // Do something TODO implement normal logging
+            e.printStackTrace();
+        }
+    }
+
     @GetMapping("/finalizeVoteProtocol")
     public String finalizeVoteProtocol(@RequestParam("voteId") Long voteId, Model model) throws Exception {
         Vote vote = voteService.getVoteById(voteId);
@@ -105,7 +125,7 @@ public class VoteController {
     @PostMapping("/insertVoteResults")
     public String insertVoteResults(@ModelAttribute("voter") Vote voter, BindingResult result, Model model) {
         if (result.hasErrors()) {
-            model.addAttribute("voter",voter);
+            model.addAttribute("voter", voter);
             return "insertVoteResults";
         } else {
             voteService.insertVoteResultsBatch(voter);
@@ -138,7 +158,8 @@ public class VoteController {
     public String deactivateVote(@RequestParam("voteId") Long voteId, Model model) throws VoteProcessException {
         Vote vote = voteService.getVoteById(voteId);
         model.addAttribute("vote", vote);
-        vote = voteService.makeInactive(vote);List<Vote> votes = voteService.getAllActiveVotes();
+        vote = voteService.makeInactive(vote);
+        List<Vote> votes = voteService.getAllActiveVotes();
         model.addAttribute("votes", votes);
         return "redirect:showVotes";
     }
