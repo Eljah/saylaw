@@ -19,7 +19,7 @@ import java.util.List;
  * Created by eljah32 on 7/25/2018.
  */
 @Controller
-@SessionAttributes("voteR")
+@SessionAttributes("voter")
 public class VoteController {
 
     @Autowired
@@ -48,7 +48,7 @@ public class VoteController {
     @GetMapping("/showVotes")
     public String showVotes(Model model) {
 
-        List<Vote> votes = voteService.getAllVotes();
+        List<Vote> votes = voteService.getAllActiveVotes();
         model.addAttribute("votes", votes);
         return "showVotes";
     }
@@ -57,7 +57,7 @@ public class VoteController {
     public String makeVoteProtocol(@RequestParam("voteId") Long voteId, Model model) throws VoteProcessException {
         Vote vote = voteService.getVoteById(voteId);
         voteService.makeVoteProtocol(vote);
-        List<Vote> votes = voteService.getAllVotes();
+        List<Vote> votes = voteService.getAllActiveVotes();
         model.addAttribute("votes", votes);
         return "redirect:showVotes";
     }
@@ -78,7 +78,7 @@ public class VoteController {
     public String finalizeVoteProtocol(@RequestParam("voteId") Long voteId, Model model) throws Exception {
         Vote vote = voteService.getVoteById(voteId);
         voteService.finalizeVoteProtocol(vote);
-        List<Vote> votes = voteService.getAllVotes();
+        List<Vote> votes = voteService.getAllActiveVotes();
         model.addAttribute("vote", vote);
         model.addAttribute("name", vote.getName());
         model.addAttribute("votes", votes);
@@ -89,26 +89,27 @@ public class VoteController {
     public String allNoticesServed(@RequestParam("voteId") Long voteId, Model model) throws VoteProcessException {
         Vote vote = voteService.getVoteById(voteId);
         voteService.allNoticesServed(vote, new Date());
-        List<Vote> votes = voteService.getAllVotes();
+        List<Vote> votes = voteService.getAllActiveVotes();
         model.addAttribute("votes", votes);
         return "redirect:showVotes";
     }
 
     @GetMapping("/insertVoteResults")
     public String insertVoteResults(@RequestParam("voteId") Long voteId, Model model) {
-        Vote vote = voteService.getVoteById(voteId);
-        model.addAttribute("voteR", vote);
+        Vote voter = voteService.getVoteById(voteId);
+        model.addAttribute("voter", voter);
         return "insertVoteResults";
     }
 
+    //@ModelAttribute("voter") is needed together with @SessionAttribute("voter") to make partial updates of insert results to work
     @PostMapping("/insertVoteResults")
-    public String insertVoteResults(@ModelAttribute Vote vote, BindingResult result, Model model) {
+    public String insertVoteResults(@ModelAttribute("voter") Vote voter, BindingResult result, Model model) {
         if (result.hasErrors()) {
-            model.addAttribute("vote",vote);
+            model.addAttribute("voter",voter);
             return "insertVoteResults";
         } else {
-            voteService.insertVoteResultsBatch(vote);
-            List<Vote> votes = voteService.getAllVotes();
+            voteService.insertVoteResultsBatch(voter);
+            List<Vote> votes = voteService.getAllActiveVotes();
             model.addAttribute("votes", votes);
             return "redirect:showVotes";
         }
@@ -118,7 +119,7 @@ public class VoteController {
     public String сompleteVoteResults(@RequestParam("voteId") Long voteId, Model model) throws VoteProcessException {
         Vote vote = voteService.getVoteById(voteId);
         voteService.completeVoteResultsBatch(vote);
-        List<Vote> votes = voteService.getAllVotes();
+        List<Vote> votes = voteService.getAllActiveVotes();
         model.addAttribute("votes", votes);
         return "redirect:showVotes";
     }
@@ -130,5 +131,15 @@ public class VoteController {
         List<Owner> owners = voteService.getAllOwners();
         model.addAttribute("owners", owners);
         return "voteDetails";
+    }
+
+    @GetMapping("/deactivateVote")
+    @Transactional
+    public String deactivateVote(@RequestParam("voteId") Long voteId, Model model) throws VoteProcessException {
+        Vote vote = voteService.getVoteById(voteId);
+        model.addAttribute("vote", vote);
+        vote = voteService.makeInactive(vote);List<Vote> votes = voteService.getAllActiveVotes();
+        model.addAttribute("votes", votes);
+        return "redirect:showVotes";
     }
 }

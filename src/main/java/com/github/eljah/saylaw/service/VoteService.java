@@ -12,6 +12,8 @@ import java.util.List;
 public interface VoteService {
     Vote newVote(Vote vote);
 
+    Vote makeInactive(Vote vote);
+
     Vote makeVoteProtocol(Vote vote) throws VoteProcessException;
 
     Vote finalizeVoteProtocol(Vote vote) throws Exception;
@@ -29,6 +31,8 @@ public interface VoteService {
     List<Owner> getAllOwners();
 
     List<Vote> getAllVotes();
+
+    List<Vote> getAllActiveVotes();
 
     Vote getVoteById(Long id);
 }

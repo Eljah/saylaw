@@ -67,6 +67,12 @@ public class VoteServiceImpl implements VoteService {
     }
 
     @Override
+    public Vote makeInactive(Vote vote) {
+        vote.setActive(false);
+        return vote;
+    }
+
+    @Override
     @Transactional
     public Vote makeVoteProtocol(Vote vote) throws VoteProcessException {
         if (vote.getStatus() == Vote.VoteStatus.PREPARED) {
@@ -164,6 +170,7 @@ public class VoteServiceImpl implements VoteService {
         for (ShareVote shareVote: shareVotes)
         {
             System.out.println(shareVote.toString());
+            System.out.println(shareVote.getShare().toString());
             shareVote.setShareNominator(shareVote.getShare().getShareNominator());
             shareVote.setShareDenominator(shareVote.getShare().getShareDenominator());
             shareVote.setShareValue(shareVote.getShare().getShareValue());
@@ -254,6 +261,11 @@ public class VoteServiceImpl implements VoteService {
     @Override
     public List<Vote> getAllVotes() {
         return voteRepository.findAll();
+    }
+
+    @Override
+    public List<Vote> getAllActiveVotes() {
+        return voteRepository.findByActiveIsTrue();
     }
 
     @Override

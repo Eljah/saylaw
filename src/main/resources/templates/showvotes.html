@@ -20,6 +20,9 @@
             <a th:href="@{'/insertVoteResults?voteId=' + ${item.id}}">Заполнение вариантов ответов</a>
             <a th:href="@{'/сompleteVoteResults?voteId=' + ${item.id}}">Вычислить окончательный результат голосования</a>
             <br>
+            <a th:href="@{'/deactivateVote?voteId=' + ${item.id}}">Скрыть (отправить проект голосования в архив)</a>
+
+            <br>
             <div th:if="${item != null && item.voteQuestions != null}">
                 <h3>Поставленные вопросы</h3>
                 <ul>

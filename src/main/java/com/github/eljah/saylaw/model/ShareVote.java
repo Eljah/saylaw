@@ -17,13 +17,13 @@ import java.util.List;
 @Setter
 @Getter
 @NoArgsConstructor
-//@ToString
+@ToString
 public class ShareVote {
     @Id
     @GeneratedValue
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private Share share;
     @ManyToOne
     private Vote vote;

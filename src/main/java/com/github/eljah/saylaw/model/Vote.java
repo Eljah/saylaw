@@ -49,6 +49,8 @@ public class Vote {
 
     VoteStatus status;
 
+    Boolean active=true;
+
     public enum VoteStatus
     {
         PREPARED,

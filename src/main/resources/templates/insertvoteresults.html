@@ -5,12 +5,13 @@
     <title>Результаты голосования: общее редактирование</title>
 </head>
 <body>
-<div th:if="${voteR != null}">
-    <form action="submit" th:action="@{/insertVoteResults}" th:object="${voteR}" method="post">
+<div th:if="${voter != null}">
+    <form action="submit" th:action="@{/insertVoteResults}" th:object="${voter}" method="post">
         <input type="hidden" th:field="*{name}" th:value="*{name}"/>
+        <input type="hidden" th:field="*{id}" th:value="*{id}"/>
         <h1>Помещения:</h1>
         <ul>
-            <li th:each="item, status0 : ${voteR.shareVotes}">
+            <li th:each="item, status0 : ${voter.shareVotes}">
                 <h2>[[${item.share.name}]] ([[${item.share.area}]])</h2>
 
                 <div th:if="${item != null && item.share != null}">
@@ -18,7 +19,7 @@
                     <table>
                         <tr>
                             <th>Владелец и описание доли</th>
-                            <th th:each="votequestion : ${voteR.voteQuestions}">[[${votequestion.text}]]</th>
+                            <th th:each="votequestion : ${voter.voteQuestions}">[[${votequestion.text}]]</th>
                         </tr>
                         <tr th:each="ownersharevote, status1 : ${item.ownerShareVotes}">
                             <td>[[${ownersharevote.ownerShare.owner.firstName}]]
