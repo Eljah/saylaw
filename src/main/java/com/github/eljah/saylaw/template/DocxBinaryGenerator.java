@@ -15,10 +15,7 @@ import org.springframework.web.servlet.ViewResolver;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.StringReader;
-import java.util.Collection;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by eljah32 on 7/30/2018.
@@ -41,7 +38,13 @@ public class DocxBinaryGenerator {
                 for (XWPFRun r : runs) {
                     String text = r.getText(0);
                     text = prepareReplacement(text, model);
-                    r.setText(text, 0);
+                    List<String> items = Arrays.asList(text.split("\\s*\n\\s*"));
+                    r.setText("",0);
+                    for (String item: items)
+                    {
+                        r.setText(item);
+                        r.addCarriageReturn();
+                    }
                 }
             }
         }
@@ -52,7 +55,13 @@ public class DocxBinaryGenerator {
                         for (XWPFRun r : p.getRuns()) {
                             String text = r.getText(0);
                             text = prepareReplacement(text, model);
-                            r.setText(text, 0);
+                            List<String> items = Arrays.asList(text.split("\\s*\n\\s*"));
+                            r.setText("",0);
+                            for (String item: items)
+                            {
+                                r.setText(item);
+                                r.addCarriageReturn();
+                            }
                         }
                     }
                 }
