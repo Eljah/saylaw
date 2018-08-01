@@ -2,6 +2,7 @@ package com.github.eljah.saylaw.config;
 
 import com.github.eljah.saylaw.template.DocxView;
 import com.github.eljah.saylaw.template.DocxViewResolver;
+import freemarker.template.DefaultObjectWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -61,10 +62,19 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         return new DocxViewResolver();
     }
 
+
     @Override
     public void configureDefaultServletHandling(
             DefaultServletHandlerConfigurer configurer) {
         configurer.enable();
     }
 
+    //@Bean
+    //public freemarker.template.Configuration freemarkerConfiguration()
+    //{
+    //    freemarker.template.Configuration cfg = new freemarker.template.Configuration();
+    //    cfg.setObjectWrapper(new DefaultObjectWrapper());
+    //    return  cfg;
+    //}
+    //it already exists
 }

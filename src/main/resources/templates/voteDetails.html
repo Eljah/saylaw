@@ -53,6 +53,11 @@
         <input  type="hidden" th:field="*{voteQuestions[__${status.index}__].id}" th:value="*{voteQuestions[__${status.index}__].id}"/>
         <input  type="text" th:field="*{voteQuestions[__${status.index}__].text}" th:value="*{voteQuestions[__${status.index}__].text}"/>
     </div>
+    Документация по помещениям:
+    <div th:each="step, status : *{shareVotes}">
+        <a th:href="@{'/viewVoteShareProtocol?voteShareProtocolId=' + ${step.protocol.id} + '&filename=' + ${vote.voteOnsite} + '_' + ${step.share.name} }">[[${step.share.name}]]</a>,
+    </div>
+
     <br>
     <a id="filldetails" onclick="addFields()">Добавить вопросы в список</a>
     <br>
