@@ -27,7 +27,7 @@ public class VoteController {
 
     @GetMapping("/addVote")
     @Transactional
-    public String addShare(Model model) {
+    public String addVote(Model model) {
 
         Vote vote = new Vote();
         model.addAttribute("vote", vote);
@@ -37,7 +37,7 @@ public class VoteController {
     }
 
     @PostMapping("/addVote")
-    public String addShare(@ModelAttribute Vote vote, BindingResult result) {
+    public String addVote(@ModelAttribute Vote vote, BindingResult result) {
         if (result.hasErrors()) {
             return "voteDetails";
         }

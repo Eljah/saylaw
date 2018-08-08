@@ -11,10 +11,12 @@ import java.util.Set;
  */
 public interface ShareService {
     void save(Share share);
+    void saveWithInternals(Share share);
     void createShares(Set<Share> shares);
     void createOwnerShares(List<OwnerShare> ownerShares);
     void createOwnerShares(List<OwnerShare> ownerShares, Share share);
     void calculateShareValues();
     void calculateOwnerShareValues();
-    List<Share> showAll();
+    List<Share> showShares();
+    Share get(Long id);
 }

@@ -4,6 +4,7 @@ import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.xwpf.extractor.XWPFWordExtractor;
 import org.apache.poi.xwpf.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import java.util.*;
  * Created by eljah32 on 7/30/2018.
  */
 @Component
+@Slf4j
 public class DocxBinaryGenerator {
 
     @Autowired
@@ -76,7 +78,7 @@ public class DocxBinaryGenerator {
         String toReturn = "";
         if (textRun != null) {
             try {
-                System.out.println(textRun);
+                log.info(String.format("Text in current word run: %s", textRun));
                 Template t = new Template("templateName", new StringReader(textRun), configuration);
                 //Template t = new Template("templateName", new StringReader("templatetemplate"), configuration);
                 toReturn = FreeMarkerTemplateUtils.processTemplateIntoString(t, model);

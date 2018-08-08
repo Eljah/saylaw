@@ -1,15 +1,14 @@
 package com.github.eljah.saylaw.service;
 
-import com.github.eljah.saylaw.model.DenominatorFind;
-import com.github.eljah.saylaw.model.FloatNominatorDenominator;
-import com.github.eljah.saylaw.model.OwnerShare;
-import com.github.eljah.saylaw.model.Share;
+import com.github.eljah.saylaw.model.*;
 import com.github.eljah.saylaw.repository.OwnerRepository;
 import com.github.eljah.saylaw.repository.OwnerShareRepository;
 import com.github.eljah.saylaw.repository.ShareRepository;
 import com.github.eljah.saylaw.template.AbstractDocxView;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.List;
@@ -20,6 +19,7 @@ import java.util.Set;
  */
 
 @Service
+@Slf4j
 public class ShareServiceImpl implements ShareService {
     @Autowired
     ShareRepository shareRepository;
@@ -31,13 +31,46 @@ public class ShareServiceImpl implements ShareService {
     OwnerShareRepository ownerShareRepository;
 
     @Override
-    public List<Share> showAll() {
-        return shareRepository.findAll();
+    public List<Share> showShares() {
+        return shareRepository.findAllByOrderByNameAsc();
+    }
+
+    @Override
+    public Share get(Long id) {
+        return shareRepository.getOne(id);
     }
 
     @Override
     public void save(Share share) {
         shareRepository.save(share);
+    }
+
+    @Override
+    @Transactional
+    public void saveWithInternals(Share share) {
+        log.info(share.toString());
+        share.setActive(true);
+        List<OwnerShare> ownerShareList = share.getOwnerShare();
+        log.info(share.toString());
+        shareRepository.save(share);
+        for (OwnerShare ownerShare : ownerShareList) {
+            ownerShare.setActive(true);
+            ownerShare.setShare(share);
+            Owner owner = ownerShare.getOwner();
+            log.info(owner.toString());
+            log.info(ownerShare.toString());
+            owner.setOwnerShare(null);
+            owner=ownerRepository.save(owner);
+            ownerShare.setOwner(owner);
+            ownerShareRepository.save(ownerShare);
+            //log.info(owner.toString());
+            //log.info(ownerShare.toString());
+        }
+        log.info("Share repository saved:");
+        log.info("Now recalculating share values");
+        calculateShareValues();
+        log.info("Now recalculating owner share values");
+        calculateOwnerShareValues();
     }
 
     @Override
@@ -64,12 +97,11 @@ public class ShareServiceImpl implements ShareService {
     }
 
     @Override
+    @Transactional
     public void createOwnerShares(List<OwnerShare> ownerShares) {
         for (OwnerShare ownerShare : ownerShares) {
-            ownerShare.getOwner().setOwnerShare(ownerShare);
             ownerShareRepository.save(ownerShare);
             ownerRepository.save(ownerShare.getOwner());
-
         }
     }
 
@@ -78,7 +110,7 @@ public class ShareServiceImpl implements ShareService {
         for (OwnerShare ownerShare : ownerShares) {
             ownerShare.setActive(true);
             ownerShare.setShare(share);
-            ownerShare.getOwner().setOwnerShare(ownerShare);
+            //ownerShare.getOwner().setOwnerShare(ownerShare);
             ownerRepository.save(ownerShare.getOwner());
             System.out.println(ownerShare.toString());
             ownerShareRepository.save(ownerShare);

@@ -15,7 +15,7 @@ import javax.persistence.*;
 @Setter
 @Getter
 @NoArgsConstructor
-@ToString
+@ToString(exclude = "owner")
 public class OwnerShare {
     @Id
     @GeneratedValue

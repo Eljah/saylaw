@@ -1,9 +1,6 @@
 package com.github.eljah.saylaw.model;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.springframework.data.repository.cdi.Eager;
 
 import javax.persistence.*;
@@ -19,6 +16,7 @@ import java.util.List;
 @Setter
 @Getter
 @NoArgsConstructor
+@ToString//(exclude = "ownerShare")
 public class Owner {
     @Id
     @GeneratedValue
@@ -37,5 +35,8 @@ public class Owner {
 
     @OneToOne(mappedBy = "owner", fetch = FetchType.EAGER)
     private OwnerShare ownerShare;
+
+    @Version
+    private Long version;
 
 }

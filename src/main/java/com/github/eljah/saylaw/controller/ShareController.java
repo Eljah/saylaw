@@ -5,9 +5,6 @@ import com.github.eljah.saylaw.model.Owner;
 import com.github.eljah.saylaw.model.OwnerShare;
 import com.github.eljah.saylaw.model.Share;
 import com.github.eljah.saylaw.service.ShareService;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -17,16 +14,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -36,6 +30,7 @@ import java.util.*;
  */
 
 @Controller
+//@SessionAttributes("share")
 public class ShareController {
     @Autowired
     ShareService shareService;
@@ -93,11 +88,17 @@ public class ShareController {
 
     @GetMapping("/")
     public String index() {
-        return "shareupload";
+        return "index";
     }
 
+    @GetMapping("/shareUpload")
+    public String shareupload() {
+        return "shareUpload";
+    }
+
+
     @Transactional
-    @PostMapping("/shareupload") // //new annotation since 4.3
+    @PostMapping("/shareUpload") // //new annotation since 4.3
     public String singleFileUpload(@RequestParam("file") MultipartFile file,
                                    RedirectAttributes redirectAttributes) {
 
@@ -265,11 +266,11 @@ public class ShareController {
         return "uploadStatus";
     }
 
-    @GetMapping("/showAll")
+    @GetMapping("/showShares")
     public String showAll(Model model) {
 
-        model.addAttribute("all", shareService.showAll());
-        return "showAll";
+        model.addAttribute("all", shareService.showShares());
+        return "showshares";
     }
 
     @GetMapping("/addShare")
@@ -282,6 +283,27 @@ public class ShareController {
         return "addShare";
     }
 
+    @GetMapping("/editShare")
+    public String editShare(Model model, @RequestParam("shareId") Long shareId) {
+        Share sharetoedit=shareService.get(shareId);
+        //model.addAttribute("sharetoedit", sharetoedit);
+        model.addAttribute("sharetoedit", sharetoedit);
+        return "editShare";
+    }
+
+    @GetMapping("/deleteShare")
+    @Transactional
+    public String deleteShare(Model model, @RequestParam("shareId") Long shareId) {
+        Share shareToEdit=shareService.get(shareId);
+        shareToEdit.setActive(false);
+        //shareService.save(shareToEdit);
+        shareService.createOwnerShares(shareToEdit.getOwnerShare(),shareToEdit);
+        shareService.calculateShareValues();
+        shareService.calculateOwnerShareValues();
+        model.addAttribute("share", shareToEdit);
+        return "addShare";
+    }
+
     @PostMapping("/addShare")
     @Transactional
     public String addShare(@ModelAttribute Share share) {
@@ -290,6 +312,14 @@ public class ShareController {
         shareService.createOwnerShares(share.getOwnerShare(),share);
         shareService.calculateShareValues();
         shareService.calculateOwnerShareValues();
-        return "redirect:showAll";
+        return "redirect:showShares";
+    }
+
+    @PostMapping("/editShare")
+    @Transactional
+    public String saveShare(@ModelAttribute("sharetoedit") Share share, BindingResult result) {
+    //public String saveShare(@ModelAttribute Share share) {
+        shareService.saveWithInternals(share);
+        return "redirect:showShares";
     }
 }

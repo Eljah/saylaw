@@ -5,17 +5,11 @@
     <title>Детали голосования</title>
     <script type='text/javascript'>
         function addFields(){
-            // Number of inputs to create
-            var number = document.getElementById("member").value;
-            // Container <div> where dynamic content will be placed
-            var container = document.getElementById("container");
-            // Clear previous contents of the container
-            //while (container.hasChildNodes()) {
-            //    container.removeChild(container.lastChild);
-            //}
-                // Append a node with a random text
+                // Number of inputs to create
+                var number = document.getElementById("member").value;
+                // Container <div> where dynamic content will be placed
+                var container = document.getElementById("container");
                 container.appendChild(document.createTextNode("Добавляемый " + (number*1+1)));
-                // Create an <input> element, set its type and name attributes
                 var input = document.createElement("input");
                 input.type = "text";
                 input.name = "voteQuestions["+(number)+"].text";
@@ -29,15 +23,16 @@
                 container.appendChild(document.createElement("br"));
                 document.getElementById("member").value=(number*1+1)
         }
+
     </script>
 </head>
 <body>
 <h1>Добавление нового голосования</h1>
 <form action="submit" th:action="@{/addVote}" th:object="${vote}" method="post">
-    <p>Общая тема голосования <input type="text" th:field="*{name}" /></p>
-    <p>Дата начала голосования <input type="datetime-local" th:field="*{voteInitiated}" /></p>
-    <p>Дата очного голосования <input type="datetime-local" th:field="*{voteOnsite}" /></p>
-    <p>Дата подведения итогов <input type="datetime-local" th:field="*{voteValidThrough}" /></p>
+    <p>Общая тема голосования <input type="text" th:field="*{name}"/></p>
+    <p>Дата начала голосования <input type="datetime-local" th:field="*{voteInitiated}"/></p>
+    <p>Дата очного голосования <input type="datetime-local" th:field="*{voteOnsite}"/></p>
+    <p>Дата подведения итогов <input type="datetime-local" th:field="*{voteValidThrough}"/></p>
     <select th:field="*{initiator.id}">
         <option th:each="owner : ${owners}"
                 th:value="${owner.id}"
@@ -50,8 +45,10 @@
     <input type="hidden" id="member" name="member" th:value="${#lists.size(vote.voteQuestions)}"/>
     <input type="hidden" th:field="*{id}"/>
     <div th:each="step, status : *{voteQuestions}">
-        <input  type="hidden" th:field="*{voteQuestions[__${status.index}__].id}" th:value="*{voteQuestions[__${status.index}__].id}"/>
-        <input  type="text" th:field="*{voteQuestions[__${status.index}__].text}" th:value="*{voteQuestions[__${status.index}__].text}"/>
+        <input type="hidden" th:field="*{voteQuestions[__${status.index}__].id}"
+               th:value="*{voteQuestions[__${status.index}__].id}"/>
+        <input type="text" th:field="*{voteQuestions[__${status.index}__].text}"
+               th:value="*{voteQuestions[__${status.index}__].text}"/>
     </div>
     Документация по помещениям:
     <div th:each="step, status : *{shareVotes}">
@@ -63,7 +60,7 @@
     <br>
     <p></p>
     <div id="container"></div>
-    <input type="submit" value="Submit" /> <input type="reset" value="Reset" />
+    <input type="submit" value="Submit"/> <input type="reset" value="Reset"/>
 </form>
 </body>
 </html>

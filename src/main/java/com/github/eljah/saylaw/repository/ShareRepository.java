@@ -14,4 +14,5 @@ import java.util.List;
 public interface ShareRepository extends JpaRepository<Share, Long> {
     List<Share> findByActiveIsTrue();
     List<Share> findByActiveIsFalse();
+    List<Share> findAllByOrderByNameAsc();
 }

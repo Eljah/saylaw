@@ -18,6 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = {"name"})
+@ToString(exclude = {"ownerShare","shareVotes"})
 public class Share {
     @Id
     @GeneratedValue
