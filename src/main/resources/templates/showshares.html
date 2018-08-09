@@ -9,7 +9,7 @@
     <h1>Квартиры</h1>
     <ul>
         <li th:each="item : ${all}">
-            <h2>[[${item.name}]] ([[${item.area}]]) (<a th:href="@{'/editShare?shareId=' + ${item.id}}">Редактировать</a>, <a th:href="@{'/deleteShare?shareId=' + ${item.id}}">Деактивировать</a>)</h2>
+            <h2>[[${item.name}]] ([[${item.area}]]) (<a th:href="@{'/editShare?shareId=' + ${item.id}}">Редактировать</a>,  <th:block th:switch="${item.active}"><a th:case="true" th:href="@{'/deleteShare?shareId=' + ${item.id}}">Деактивировать</a> <a th:case="false" th:href="@{'/restoreShare?shareId=' + ${item.id}}">Активировать</a></th:block>)</h2>
             <div th:if="${item != null && item.ownerShare != null}">
                 <h3>Доли владения</h3>
                 <ul>

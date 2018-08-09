@@ -293,9 +293,17 @@ public class ShareController {
 
     @GetMapping("/deleteShare")
     @Transactional
-    public String deleteShare(Model model, @RequestParam("shareId") Long shareId) {
+    public String deleteShare(@RequestParam("shareId") Long shareId) {
         Share shareToEdit=shareService.get(shareId);
         shareService.saveInactiveWithInternals(shareToEdit);
+        return "redirect:showShares";
+    }
+
+    @GetMapping("/restoreShare")
+    @Transactional
+    public String restoreShare(@RequestParam("shareId") Long shareId) {
+        Share shareToEdit=shareService.get(shareId);
+        shareService.saveActiveWithInternals(shareToEdit);
         return "redirect:showShares";
     }
 

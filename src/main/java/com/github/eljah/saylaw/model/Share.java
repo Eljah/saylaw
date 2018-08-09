@@ -1,6 +1,7 @@
 package com.github.eljah.saylaw.model;
 
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.solr.core.mapping.Indexed;
 
 import javax.persistence.*;
@@ -14,11 +15,12 @@ import java.util.List;
 @Entity
 @Setter
 @Getter
-@Builder(toBuilder=true)
+@Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = {"name"})
-@ToString(exclude = {"ownerShare","shareVotes"})
+@ToString(exclude = {"ownerShare", "shareVotes"})
+@Slf4j
 public class Share {
     @Id
     @GeneratedValue
@@ -28,8 +30,34 @@ public class Share {
     private Long version;
 
     @Indexed
-    @Column(unique = true)
+    @Access(AccessType.PROPERTY)
     private String name;
+
+    @Column(unique = true)
+    public void setName(String name) {
+        //log.info("Setter Name is called");
+        this.name = name;
+        try {
+            this.setNumber(number = name != null ? Integer.parseInt(name.replaceAll("[^0-9]", "")) : null);
+        }
+        catch (java.lang.NumberFormatException e)
+        {
+            this.setNumber(0);
+        }
+    }
+
+
+
+    @Access(AccessType.PROPERTY)
+    private Integer number;
+
+    public void setNumber(Integer number) {
+        if (number == null) {
+        } else {
+            log.trace(number + " number passed to store");
+            this.number = number;
+        }
+    }
 
     private long shareNominator;
     private long shareDenominator;
@@ -42,10 +70,9 @@ public class Share {
     private int floor;
 
     @OneToMany(mappedBy = "share")
-    private List<OwnerShare> ownerShare=new ArrayList<>();
+    private List<OwnerShare> ownerShare = new ArrayList<>();
 
-    public enum ShareType
-    {
+    public enum ShareType {
         RESIDENTAL,
         NONRESIDENTAL
     }
