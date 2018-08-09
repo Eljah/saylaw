@@ -295,13 +295,8 @@ public class ShareController {
     @Transactional
     public String deleteShare(Model model, @RequestParam("shareId") Long shareId) {
         Share shareToEdit=shareService.get(shareId);
-        shareToEdit.setActive(false);
-        //shareService.save(shareToEdit);
-        shareService.createOwnerShares(shareToEdit.getOwnerShare(),shareToEdit);
-        shareService.calculateShareValues();
-        shareService.calculateOwnerShareValues();
-        model.addAttribute("share", shareToEdit);
-        return "addShare";
+        shareService.saveInactiveWithInternals(shareToEdit);
+        return "redirect:showShares";
     }
 
     @PostMapping("/addShare")

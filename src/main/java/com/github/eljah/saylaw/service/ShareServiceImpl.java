@@ -74,6 +74,33 @@ public class ShareServiceImpl implements ShareService {
     }
 
     @Override
+    public void saveInactiveWithInternals(Share share) {
+        log.info(share.toString());
+        share.setActive(false);
+        List<OwnerShare> ownerShareList = share.getOwnerShare();
+        log.info(share.toString());
+        shareRepository.save(share);
+        for (OwnerShare ownerShare : ownerShareList) {
+            ownerShare.setActive(false);
+            ownerShare.setShare(share);
+            Owner owner = ownerShare.getOwner();
+            log.info(owner.toString());
+            log.info(ownerShare.toString());
+            owner.setOwnerShare(null);
+            owner=ownerRepository.save(owner);
+            ownerShare.setOwner(owner);
+            ownerShareRepository.save(ownerShare);
+            //log.info(owner.toString());
+            //log.info(ownerShare.toString());
+        }
+        log.info("Share repository saved:");
+        log.info("Now recalculating share values");
+        calculateShareValues();
+        log.info("Now recalculating owner share values");
+        calculateOwnerShareValues();
+    }
+
+    @Override
     public void createShares(Set<Share> shares) {
         List<Share> preexisting = shareRepository.findAll();
         for (Share share : shares) {
