@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" layout:decorate="~{base}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
     <meta charset="UTF-8">
     <title>Добавить квартиру</title>
-
-    <script type='text/javascript'>
+    <th:block layout:fragment="scripts">
+        <script type='text/javascript'>
         function addFields(){
             // Number of inputs to create
             var number = document.getElementById("member").value;
@@ -63,15 +64,17 @@
                 container.appendChild(document.createElement("br"));
             }
         }
-    </script>
+
+        </script>
+    </th:block>
 </head>
-<body>
+<body layout:fragment="page_content" id="page_content">
 <h1>Добавление помещения в список долей многоквартирного дома</h1>
 <form action="submit" th:action="@{/addShare}" th:object="${share}" method="post">
-    <p>Номер квартиры <input type="text" th:field="*{name}" /></p>
-    <p>Площадь (формат записи 00.0) <input type="text" th:field="*{area}" /></p>
-    <p>Этаж <input type="text" th:field="*{floor}" /></p>
-    <p>Количество долей <input type="text" id="member" name="member" /></p>
+    <p>Номер квартиры <input type="text" th:field="*{name}"/></p>
+    <p>Площадь (формат записи 00.0) <input type="text" th:field="*{area}"/></p>
+    <p>Этаж <input type="text" th:field="*{floor}"/></p>
+    <p>Количество долей <input type="text" id="member" name="member"/></p>
     <select th:field="*{type}">
         <option th:each="state : ${T(com.github.eljah.saylaw.model.Share.ShareType).values()}"
                 th:value="${state}"
@@ -86,7 +89,7 @@
     <a id="filldetails" onclick="addFields()">Fill Details</a>
     <p></p>
     <div id="container"></div>
-    <input type="submit" value="Submit" /> <input type="reset" value="Reset" />
-    </form>
+    <input type="submit" value="Submit"/> <input type="reset" value="Reset"/>
+</form>
 </body>
 </html>

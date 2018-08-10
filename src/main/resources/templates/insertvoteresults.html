@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{base}">
 <head>
     <meta charset="UTF-8">
     <title>Результаты голосования: общее редактирование</title>
 </head>
-<body>
+<body layout:fragment="page_content" id="page_content">
 <div th:if="${voter != null}">
     <form action="submit" th:action="@{/insertVoteResults}" th:object="${voter}" method="post">
         <input type="hidden" th:field="*{name}" th:value="*{name}"/>

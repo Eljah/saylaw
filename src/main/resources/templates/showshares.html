@@ -1,10 +1,12 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{base}">
 <head>
     <meta charset="UTF-8">
     <title>Список собственников помещения</title>
 </head>
-<body>
+<body layout:fragment="page_content" id="page_content">
 <div th:if="${all != null}">
     <h1>Квартиры</h1>
     <ul>

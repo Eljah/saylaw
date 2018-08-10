@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" layout:decorate="~{base}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
     <meta charset="UTF-8">
     <title>Добавить квартиру</title>
-
-    <script type='text/javascript'>
+    <th:block layout:fragment="scripts">
+        <script type='text/javascript'>
         function addFields(){
             // Number of inputs to create
             var number = document.getElementById("member").value;
@@ -77,14 +78,16 @@
                 document.getElementById("member").value=(number*1+1)
             //}
         }
-    </script>
+
+        </script>
+    </th:block>
 </head>
-<body>
+<body layout:fragment="page_content" id="page_content">
 <h1>Добавление помещения в список долей многоквартирного дома</h1>
 <form action="submit" th:action="@{/editShare}" th:object="${sharetoedit}" method="post">
-    <p>Номер квартиры <input type="text" th:field="*{name}" /></p>
-    <p>Площадь (формат записи 00.0) <input type="text" th:field="*{area}" /></p>
-    <p>Этаж <input type="text" th:field="*{floor}" /></p>
+    <p>Номер квартиры <input type="text" th:field="*{name}"/></p>
+    <p>Площадь (формат записи 00.0) <input type="text" th:field="*{area}"/></p>
+    <p>Этаж <input type="text" th:field="*{floor}"/></p>
     <select th:field="*{type}">
         <option th:each="state : ${T(com.github.eljah.saylaw.model.Share.ShareType).values()}"
                 th:value="${state}"
@@ -93,18 +96,28 @@
     </select>
     <input type="hidden" th:field="*{id}"/>
     <input type="hidden" th:field="*{version}"/>
-    <input type="hidden" id="member" name="member" th:value="${#lists.size(sharetoedit.ownerShare)}" />
+    <input type="hidden" id="member" name="member" th:value="${#lists.size(sharetoedit.ownerShare)}"/>
     <div th:each="step, status : *{ownerShare}">
-        <input  type="hidden" th:field="*{ownerShare[__${status.index}__].id}" th:value="*{ownerShare[__${status.index}__].id}"/>
-        <input  type="hidden" th:field="*{ownerShare[__${status.index}__].version}" th:value="*{ownerShare[__${status.index}__].version}"/>
-        <input  type="number" th:field="*{ownerShare[__${status.index}__].shareNominator}" th:value="*{ownerShare[__${status.index}__].shareNominator}"/>
-        <input  type="number" th:field="*{ownerShare[__${status.index}__].shareDenominator}" th:value="*{ownerShare[__${status.index}__].shareDenominator}"/>
-        <input  type="hidden" th:field="*{ownerShare[__${status.index}__].owner.id}" th:value="*{ownerShare[__${status.index}__].owner.id}"/>
-        <input  type="hidden" th:field="*{ownerShare[__${status.index}__].owner.version}" th:value="*{ownerShare[__${status.index}__].owner.version}"/>
-        <input  type="hidden" th:field="*{ownerShare[__${status.index}__].owner.ownerShare.id}" th:value="*{ownerShare[__${status.index}__].id}"/>
-        <input  type="text" th:field="*{ownerShare[__${status.index}__].owner.firstName}" th:value="*{ownerShare[__${status.index}__].owner.firstName}"/>
-        <input  type="text" th:field="*{ownerShare[__${status.index}__].owner.secondName}" th:value="*{ownerShare[__${status.index}__].owner.secondName}"/>
-        <input  type="text" th:field="*{ownerShare[__${status.index}__].owner.lastName}" th:value="*{ownerShare[__${status.index}__].owner.lastName}"/>
+        <input type="hidden" th:field="*{ownerShare[__${status.index}__].id}"
+               th:value="*{ownerShare[__${status.index}__].id}"/>
+        <input type="hidden" th:field="*{ownerShare[__${status.index}__].version}"
+               th:value="*{ownerShare[__${status.index}__].version}"/>
+        <input type="number" th:field="*{ownerShare[__${status.index}__].shareNominator}"
+               th:value="*{ownerShare[__${status.index}__].shareNominator}"/>
+        <input type="number" th:field="*{ownerShare[__${status.index}__].shareDenominator}"
+               th:value="*{ownerShare[__${status.index}__].shareDenominator}"/>
+        <input type="hidden" th:field="*{ownerShare[__${status.index}__].owner.id}"
+               th:value="*{ownerShare[__${status.index}__].owner.id}"/>
+        <input type="hidden" th:field="*{ownerShare[__${status.index}__].owner.version}"
+               th:value="*{ownerShare[__${status.index}__].owner.version}"/>
+        <input type="hidden" th:field="*{ownerShare[__${status.index}__].owner.ownerShare.id}"
+               th:value="*{ownerShare[__${status.index}__].id}"/>
+        <input type="text" th:field="*{ownerShare[__${status.index}__].owner.firstName}"
+               th:value="*{ownerShare[__${status.index}__].owner.firstName}"/>
+        <input type="text" th:field="*{ownerShare[__${status.index}__].owner.secondName}"
+               th:value="*{ownerShare[__${status.index}__].owner.secondName}"/>
+        <input type="text" th:field="*{ownerShare[__${status.index}__].owner.lastName}"
+               th:value="*{ownerShare[__${status.index}__].owner.lastName}"/>
     </div>
 
     <!--<div th:each="step, status : *{ownerShare}">
@@ -115,7 +128,7 @@
     <a id="filldetails" onclick="addFields()">Fill Details</a>
     <p></p>
     <div id="container"></div>
-    <input type="submit" value="Submit" /> <input type="reset" value="Reset" />
-    </form>
+    <input type="submit" value="Submit"/> <input type="reset" value="Reset"/>
+</form>
 </body>
 </html>

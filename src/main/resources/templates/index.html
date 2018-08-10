@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{base}"
+      >
 <head>
     <meta charset="UTF-8">
     <title>Все ссылки</title>
 </head>
-<body>
+<body layout:fragment="page_content" id="page_content">
 <li><a th:href="@{'/shareUpload'}">Загрузить данные о жильцах и долях жилого имущества дома из файла</a></li>
 <li><a th:href="@{'/showShares'}">Просмотреть списки долей имущества</a></li>
 <li><a th:href="@{'/showVotes'}">Просмотреть голосования</a></li>

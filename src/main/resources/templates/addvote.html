@@ -1,9 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" layout:decorate="~{base}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
     <meta charset="UTF-8">
     <title>Добавление нового голосования</title>
-    <script type='text/javascript'>
+    <th:block layout:fragment="scripts">
+        <script type='text/javascript'>
         function addFields(){
             // Number of inputs to create
             var number = document.getElementById("member").value;
@@ -30,20 +32,22 @@
                 container.appendChild(document.createElement("br"));
             }
         }
-    </script>
+
+        </script>
+    </th:block>
 </head>
-<body>
+<body layout:fragment="page_content" id="page_content">
 <h1>Добавление нового голосования</h1>
 <form action="submit" th:action="@{/addVote}" th:object="${vote}" method="post">
-    <p>Общая тема голосования <input type="text" th:field="*{name}" /></p>
-    <p>Количество вопросов <input type="text" id="member" name="member" /></p>
-    <p>Дата начала голосования <input type="datetime-local" th:field="*{voteInitiated}" /></p>
-    <p>Дата очного голосования <input type="datetime-local" th:field="*{voteOnsite}" /></p>
-    <p>Дата подведения итогов <input type="datetime-local" th:field="*{voteValidThrough}" /></p>
+    <p>Общая тема голосования <input type="text" th:field="*{name}"/></p>
+    <p>Количество вопросов <input type="text" id="member" name="member"/></p>
+    <p>Дата начала голосования <input type="datetime-local" th:field="*{voteInitiated}"/></p>
+    <p>Дата очного голосования <input type="datetime-local" th:field="*{voteOnsite}"/></p>
+    <p>Дата подведения итогов <input type="datetime-local" th:field="*{voteValidThrough}"/></p>
     <select th:field="*{initiator.id}">
         <option th:each="owner : ${owners}"
                 th:value="${owner.id}"
-                >
+        >
             <!--/*[[${owner.lastName}]] [[${owner.firstName}]] [[${owner.secondName}]] ([[${owner.ownerShare.share.name}]] - [[${owner.ownerShare.extractOfRegistry.ownershipCertificate}]]*/-->
             [[${owner.lastName}]] [[${owner.firstName}]] [[${owner.secondName}]] ([[${owner.ownerShare.share.name}]])
             )
@@ -59,7 +63,7 @@
     <br>
     <p></p>
     <div id="container"></div>
-    <input type="submit" value="Submit" /> <input type="reset" value="Reset" />
+    <input type="submit" value="Submit"/> <input type="reset" value="Reset"/>
 </form>
 </body>
 
